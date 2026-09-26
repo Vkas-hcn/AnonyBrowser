@@ -11,14 +11,15 @@ import com.facebook.appevents.AppEventsLogger
 import com.flux.tracksdk.core.TrackSDK
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.anony.bro.wser.BuildConfig
-import com.anony.bro.wser.app.GateBrowserApplication
 import com.anony.bro.wser.data.ref.GDataRef
+import com.anony.bro.wser.data.worker.DispatchRefreshWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -43,17 +44,18 @@ object DataHubTool {
     }
     private const val PREFS_NAME = "data_hub_prefs"
     private const val KEY_VPN_DATA = "vpn_data"
+    private const val KEY_LAST_REQUEST_TIME = "last_dispatch_request_time"
     private const val REFERRER_READ_INTERVAL_MS = 1_000L
-    private const val REFERRER_RETRY_INTERVAL_MS = 10_000L
+    private const val REFERRER_WAIT_TIMEOUT_MS = 10_000L
     private const val CONNECT_TIMEOUT_MS = 15_000
     private const val READ_TIMEOUT_MS = 15_000
-    private const val PERIODIC_REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1_000L
+    internal const val REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1_000L
+    private const val DISPATCH_RETRY_COUNT = 3
+    private const val DISPATCH_RETRY_INTERVAL_MS = 10_000L
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val refreshLock = Any()
+    private val refreshMutex = Mutex()
     private val vpnDataListeners = CopyOnWriteArraySet<() -> Unit>()
-    private var refreshJob: Job? = null
-    private var periodicRefreshJob: Job? = null
     private val requestFieldMapping = linkedMapOf(
             "appName" to "ym0cyq",
             "version" to "9c5kuk",
@@ -82,7 +84,7 @@ object DataHubTool {
         Log.d(TAG, "init: start")
         loadCachedVpnData(appContext)
         launchRefresh(appContext, "init", shouldRequestCloak = true)
-        startPeriodicRefresh(appContext)
+        DispatchRefreshWorker.schedule(appContext, nextRefreshDelayMs(appContext))
     }
 
     fun refreshAsync(context: Context) {
@@ -90,45 +92,67 @@ object DataHubTool {
         launchRefresh(context.applicationContext, "refreshAsync", shouldRequestCloak = false)
     }
 
-    /** 进程存活期间每 6 小时刷新一次 dispatch 配置；进程结束后自然停止。 */
-    private fun startPeriodicRefresh(context: Context) {
-        synchronized(refreshLock) {
-            if (periodicRefreshJob?.isActive == true) return
-            periodicRefreshJob = scope.launch {
-                while (true) {
-                    delay(PERIODIC_REFRESH_INTERVAL_MS.milliseconds)
-                    Log.d(TAG, "periodic refresh: tick")
-                    runCatching {
-                        launchRefresh(context, "periodic", shouldRequestCloak = false)
-                    }.onFailure {
-                        Log.w(TAG, "periodic refresh schedule failed: ${it.message}", it)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun launchRefresh(context: Context, source: String, shouldRequestCloak: Boolean) {
+    private fun launchRefresh(
+        context: Context,
+        source: String,
+        shouldRequestCloak: Boolean,
+        allowWhenNoConfig: Boolean = true,
+    ) {
         val appContext = context.applicationContext
-        synchronized(refreshLock) {
-            if (refreshJob?.isActive == true) {
-                Log.d(TAG, "refresh: already running, skip source=$source")
-                return
-            }
-
-            refreshJob = scope.launch {
-                try {
-                    refreshVpnData(appContext, shouldRequestCloak)
-                } finally {
-                    synchronized(refreshLock) {
-                        if (refreshJob == coroutineContext[Job]) {
-                            refreshJob = null
-                        }
-                    }
-                }
-            }
+        scope.launch {
+            refreshIfDue(appContext, source, shouldRequestCloak, allowWhenNoConfig)
         }
     }
+
+    internal suspend fun refreshFromWorker(context: Context) {
+        refreshIfDue(
+            context.applicationContext,
+            "worker",
+            shouldRequestCloak = false,
+            allowWhenNoConfig = false,
+        )
+    }
+
+    private suspend fun refreshIfDue(
+        context: Context,
+        source: String,
+        shouldRequestCloak: Boolean,
+        allowWhenNoConfig: Boolean,
+    ) = refreshMutex.withLock {
+        val now = System.currentTimeMillis()
+        val lastRequestTime = readLastRequestTime(context)
+        // 尚未拿到配置时，App 启动与进入 VPN 页面允许绕过 6 小时限流再次请求。
+        val bypassInterval = allowWhenNoConfig && !hasVpnConfig()
+        if (!bypassInterval && !isRefreshDue(lastRequestTime, now)) {
+            Log.d(TAG, "refresh: skipped source=$source, interval not reached")
+            return@withLock
+        }
+        if (bypassInterval) {
+            Log.d(TAG, "refresh: bypass interval source=$source, config not obtained yet")
+        }
+
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit { putLong(KEY_LAST_REQUEST_TIME, now) }
+        refreshVpnData(context, shouldRequestCloak)
+    }
+
+    private fun hasVpnConfig(): Boolean = vpnData != EMPTY_VPN_DATA
+
+    private fun readLastRequestTime(context: Context): Long =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getLong(KEY_LAST_REQUEST_TIME, 0L)
+
+    private fun nextRefreshDelayMs(context: Context): Long {
+        val lastRequestTime = readLastRequestTime(context)
+        val now = System.currentTimeMillis()
+        if (lastRequestTime <= 0L || now < lastRequestTime) return REFRESH_INTERVAL_MS
+        return (REFRESH_INTERVAL_MS - (now - lastRequestTime)).coerceAtLeast(0L)
+    }
+
+    internal fun isRefreshDue(lastRequestTime: Long, now: Long): Boolean =
+        lastRequestTime <= 0L ||
+            now < lastRequestTime ||
+            now - lastRequestTime >= REFRESH_INTERVAL_MS
 
     private fun loadCachedVpnData(context: Context) {
         Log.d(TAG, "cache: reading local vpn data")
@@ -155,7 +179,7 @@ object DataHubTool {
 
     private suspend fun refreshVpnData(context: Context, shouldRequestCloak: Boolean) {
         Log.d(TAG, "refresh: start")
-        runCatching {
+        val setup = runCatching {
             Log.d(TAG, "referrer: resolving")
             val referrer = awaitReferrer(context)
             Log.d(TAG, "referrer: resolved value=$referrer")
@@ -166,27 +190,41 @@ object DataHubTool {
             if (shouldRequestCloak) {
                 requestCloak(payload)
             }
+            payload
+        }.onFailure {
+            Log.w(TAG, "Prepare dispatch request failed: ${it.message}", it)
+        }.getOrNull() ?: return
 
-            val response = postDispatch(payload)
-            Log.d(TAG, "response: body=$response")
-
-            when (val validation = validateVpnData(response)) {
-                ValidationResult.Valid -> {
-                    persistVpnData(context, response)
-                    vpnData = response
-                    initializeFacebookFromVpnData(context, response)
-                    notifyVpnDataUpdated()
-                    Log.d(TAG, "refresh: success, vpn data persisted")
-                }
-
-                is ValidationResult.Invalid -> {
-                    Log.w(TAG, "refresh: invalid response, reason=${validation.reason}")
-                    return
+        repeat(DISPATCH_RETRY_COUNT + 1) { attempt ->
+            val result = runCatching {
+                val response = postDispatch(setup)
+                Log.d(TAG, "response: body=$response")
+                when (val validation = validateVpnData(response)) {
+                    ValidationResult.Valid -> response
+                    is ValidationResult.Invalid -> error(validation.reason)
                 }
             }
-        }.onFailure {
-            Log.w(TAG, "Refresh vpn data failed: ${it.message}", it)
+
+            result.onSuccess { response ->
+                persistVpnData(context, response)
+                vpnData = response
+                initializeFacebookFromVpnData(context, response)
+                notifyVpnDataUpdated()
+                Log.d(TAG, "refresh: success, vpn data persisted, attempt=${attempt + 1}")
+                return
+            }
+
+            Log.w(
+                TAG,
+                "Dispatch request failed, attempt=${attempt + 1}/${DISPATCH_RETRY_COUNT + 1}: " +
+                    result.exceptionOrNull()?.message,
+                result.exceptionOrNull(),
+            )
+            if (attempt < DISPATCH_RETRY_COUNT) {
+                delay(DISPATCH_RETRY_INTERVAL_MS.milliseconds)
+            }
         }
+        Log.w(TAG, "refresh: stopped after ${DISPATCH_RETRY_COUNT + 1} failed attempts")
     }
 
     private suspend fun awaitReferrer(context: Context): String {
@@ -198,30 +236,18 @@ object DataHubTool {
         Log.d(TAG, "referrer: local miss, start install referrer request")
         GDataRef.getRefData(context)
 
-        var elapsedSinceRequestMs = 0L
-        var pollCount = 0
-        var requestCount = 1
-        while (true) {
+        var elapsedMs = 0L
+        while (elapsedMs < REFERRER_WAIT_TIMEOUT_MS) {
             delay(REFERRER_READ_INTERVAL_MS.milliseconds)
-            elapsedSinceRequestMs += REFERRER_READ_INTERVAL_MS
-            pollCount += 1
-            Log.d(TAG, "referrer: polling count=$pollCount")
+            elapsedMs += REFERRER_READ_INTERVAL_MS
 
             GDataRef.readSavedReferrer(context)?.let {
-                Log.d(
-                    TAG,
-                    "referrer: acquired after polling count=$pollCount, requestCount=$requestCount"
-                )
+                Log.d(TAG, "referrer: acquired after ${elapsedMs}ms")
                 return it
             }
-
-            if (elapsedSinceRequestMs >= REFERRER_RETRY_INTERVAL_MS) {
-                requestCount += 1
-                elapsedSinceRequestMs = 0L
-                Log.d(TAG, "referrer: retry getRefData, requestCount=$requestCount")
-                GDataRef.getRefData(context)
-            }
         }
+        Log.w(TAG, "referrer: unavailable after ${REFERRER_WAIT_TIMEOUT_MS}ms, continue empty")
+        return ""
     }
 
     private suspend fun buildRequestPayload(context: Context, referrer: String): String {

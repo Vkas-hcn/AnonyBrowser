@@ -90,7 +90,6 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
         HintUtil.init(this)
         HintUtil.startJob(this)
         AdMobManager.initialize(this) { }
-        UpDataTool.trackEvent("loading")
     }
 
     override fun onStart(owner: LifecycleOwner) {
