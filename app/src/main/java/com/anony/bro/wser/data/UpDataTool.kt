@@ -1,6 +1,7 @@
 package com.anony.bro.wser.data
 
 
+import android.os.Bundle
 import android.util.Log
 import com.adjust.sdk.Adjust
 import com.adjust.sdk.AdjustEvent
@@ -21,11 +22,12 @@ object UpDataTool {
 
     fun trackEvent(
         event: String,
+        properties: Map<String, String>? = null,
     ) {
         trackingScope.launch {
-            firebasePoint(event)
-            TrackSDK.track(event, null, TrackPolicy.IMMEDIATE)
-            Log.d(TAG, "trackEvent: $event")
+            firebasePoint(event, properties)
+            TrackSDK.track(event, properties?.let { HashMap<String, Any>(it) }, TrackPolicy.IMMEDIATE)
+            Log.d(TAG, "trackEvent: $event properties=$properties")
         }
     }
 
@@ -41,10 +43,13 @@ object UpDataTool {
         }
     }
 
-    private fun firebasePoint(event: String) {
+    private fun firebasePoint(event: String, properties: Map<String, String>?) {
         runCatching {
             val context = GateBrowserApplication.get()
-            FirebaseAnalytics.getInstance(context).logEvent(event, null)
+            val bundle = properties?.takeIf { it.isNotEmpty() }?.let { map ->
+                Bundle().apply { map.forEach { (key, value) -> putString(key, value) } }
+            }
+            FirebaseAnalytics.getInstance(context).logEvent(event, bundle)
         }.onFailure {
             Log.e(TAG, "firebasePoint failed: $event", it)
         }

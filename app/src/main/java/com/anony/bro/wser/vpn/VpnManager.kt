@@ -203,6 +203,10 @@ object VpnManager {
             requestCode = requestCode,
             grantResults = grantResults,
             onCompleted = { granted ->
+                VpnPermissionHelper.trackRuntimeResult(
+                    granted,
+                    NotificationPermissionTracking.SCENE_VPN,
+                )
                 notificationsEnabledForSession = granted
                 completeConnectionPermissionFlow()
             },
@@ -273,6 +277,7 @@ object VpnManager {
 
     private fun requestNotificationPermissionThenReady(activity: Activity) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            VpnPermissionHelper.trackLegacyAutoAgreeIfNeeded(activity)
             notificationsEnabledForSession = true
             completeConnectionPermissionFlow()
             return
@@ -286,6 +291,12 @@ object VpnManager {
 
         if (!VpnPermissionHelper.needsNotificationPermission(activity)) {
             notificationsEnabledForSession = true
+            completeConnectionPermissionFlow()
+            return
+        }
+
+        if (!VpnPermissionHelper.canShowSystemPermissionDialog(activity)) {
+            notificationsEnabledForSession = false
             completeConnectionPermissionFlow()
             return
         }

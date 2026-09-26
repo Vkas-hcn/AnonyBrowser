@@ -45,6 +45,7 @@ import com.anony.bro.wser.guide.BrowserGuideControl
 import com.anony.bro.wser.hellohello.HintUtil
 import com.anony.bro.wser.hellohello.VpnReminderNotifier
 import com.anony.bro.wser.view.vpn.VpnActivity
+import com.anony.bro.wser.vpn.NotificationPermissionTracking
 import com.anony.bro.wser.vpn.VpnPermissionHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -90,7 +91,10 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             // 无论授权或拒绝，本步骤已展示过，前进到下一步，绝不回退
-            UpDataTool.trackEvent(if (isGranted) "notification_agree" else "notification_reject")
+            VpnPermissionHelper.trackRuntimeResult(
+                isGranted,
+                NotificationPermissionTracking.SCENE_STARTUP,
+            )
             notificationPermissionRequestInFlight = false
             completeNotificationPermissionStep()
         }
@@ -203,7 +207,14 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
 
     private fun requestStartupNotificationPermission() {
         if (!umpFlowCompleted) return
-        if (!GuideViewModel.isNotificationApplicable() || isNotificationPermissionGranted()) {
+        if (!GuideViewModel.isNotificationApplicable()) {
+            VpnPermissionHelper.trackLegacyAutoAgreeIfNeeded(this)
+            completeNotificationPermissionStep()
+            return
+        }
+        if (isNotificationPermissionGranted() ||
+            !VpnPermissionHelper.canShowSystemPermissionDialog(this)
+        ) {
             completeNotificationPermissionStep()
             return
         }
@@ -213,11 +224,15 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
         lifecycleScope.launch {
             lifecycle.withResumed {
                 notificationPermissionRequestPending = false
-                if (!isNotificationPermissionGranted()) {
-                    notificationPermissionRequestInFlight = true
-                    VpnPermissionHelper.markNotificationPermissionRequested(this@GuideActivity)
-                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                if (isNotificationPermissionGranted() ||
+                    !VpnPermissionHelper.canShowSystemPermissionDialog(this@GuideActivity)
+                ) {
+                    completeNotificationPermissionStep()
+                    return@withResumed
                 }
+                notificationPermissionRequestInFlight = true
+                VpnPermissionHelper.markNotificationPermissionRequested(this@GuideActivity)
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }

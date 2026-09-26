@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.anony.bro.wser.BuildConfig
+import com.anony.bro.wser.data.UpDataTool
 
 /**
  * VPN 通知权限助手。
@@ -78,8 +80,40 @@ object VpnPermissionHelper {
         return runCatching { activity.startActivity(appDetailsIntent) }.isSuccess
     }
 
+    fun canShowSystemPermissionDialog(activity: Activity): Boolean =
+        NotificationPermissionTracking.shouldLaunchRuntimeDialog(
+            sdkInt = Build.VERSION.SDK_INT,
+            granted = hasNotificationPermission(activity),
+            alreadyRequested = hasRequestedNotificationPermission(activity),
+            shouldShowRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+                activity,
+                Manifest.permission.POST_NOTIFICATIONS,
+            ),
+        )
+
+    fun trackRuntimeResult(granted: Boolean, scene: String) {
+        trackPermissionEvent(NotificationPermissionTracking.eventName(granted), scene)
+    }
+
+    fun trackSettingsGuideResult(granted: Boolean) {
+        trackRuntimeResult(granted, NotificationPermissionTracking.SCENE_SETTINGS_GUIDE)
+    }
+
+    fun trackLegacyAutoAgreeIfNeeded(context: Context) {
+        if (!NotificationPermissionTracking.shouldTrackLegacyAutoAgree(
+                sdkInt = Build.VERSION.SDK_INT,
+                alreadyTracked = hasTrackedLegacyAutoAgree(context),
+            )
+        ) return
+        markLegacyAutoAgreeTracked(context)
+        trackPermissionEvent(
+            NotificationPermissionTracking.EVENT_AGREE,
+            NotificationPermissionTracking.SCENE_LEGACY_AUTO,
+        )
+    }
+
     fun requestNotificationPermission(activity: Activity) {
-        if (!needsNotificationPermission(activity)) return
+        if (!canShowSystemPermissionDialog(activity)) return
         markNotificationPermissionRequested(activity)
         ActivityCompat.requestPermissions(
             activity,
@@ -89,7 +123,7 @@ object VpnPermissionHelper {
     }
 
     fun requestNotificationPermissionWhenResumed(activity: Activity) {
-        if (!needsNotificationPermission(activity)) return
+        if (!canShowSystemPermissionDialog(activity)) return
         val lifecycleOwner = activity as? LifecycleOwner ?: run {
             requestNotificationPermission(activity)
             return
@@ -130,6 +164,112 @@ object VpnPermissionHelper {
         return true
     }
 
+    private fun trackPermissionEvent(event: String, scene: String) {
+        UpDataTool.trackEvent(event, NotificationPermissionTracking.contextParams(scene))
+    }
+
+    private fun hasTrackedLegacyAutoAgree(context: Context): Boolean =
+        context.getSharedPreferences(PREFS_NOTIFICATION_PERMISSION, Context.MODE_PRIVATE)
+            .getBoolean(KEY_LEGACY_AUTO_AGREE_TRACKED, false)
+
+    private fun markLegacyAutoAgreeTracked(context: Context) {
+        context.getSharedPreferences(PREFS_NOTIFICATION_PERMISSION, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_LEGACY_AUTO_AGREE_TRACKED, true)
+            .apply()
+    }
+
     private const val PREFS_NOTIFICATION_PERMISSION = "notification_permission"
     private const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
+    private const val KEY_LEGACY_AUTO_AGREE_TRACKED = "legacy_auto_agree_tracked"
+}
+
+object NotificationPermissionTracking {
+    const val EVENT_AGREE = "notification_agree"
+    const val EVENT_REJECT = "notification_reject"
+    const val SCENE_STARTUP = "startup"
+    const val SCENE_VPN = "vpn"
+    const val SCENE_SETTINGS_GUIDE = "settings_guide"
+    const val SCENE_LEGACY_AUTO = "legacy_auto"
+    const val KEY_SCENE = "scene"
+    const val KEY_OS_VERSION = "os_version"
+    const val KEY_APP_VERSION = "app_version"
+
+    fun eventName(granted: Boolean): String =
+        if (granted) EVENT_AGREE else EVENT_REJECT
+
+    fun contextParams(
+        scene: String,
+        osVersion: Int = Build.VERSION.SDK_INT,
+        appVersion: String = BuildConfig.VERSION_NAME,
+    ): Map<String, String> = mapOf(
+        KEY_SCENE to scene,
+        KEY_OS_VERSION to osVersion.toString(),
+        KEY_APP_VERSION to appVersion,
+    )
+
+    fun shouldLaunchRuntimeDialog(
+        sdkInt: Int,
+        granted: Boolean,
+        alreadyRequested: Boolean,
+        shouldShowRationale: Boolean,
+    ): Boolean {
+        if (sdkInt < Build.VERSION_CODES.TIRAMISU) return false
+        if (granted) return false
+        return !alreadyRequested || shouldShowRationale
+    }
+
+    fun shouldTrackLegacyAutoAgree(sdkInt: Int, alreadyTracked: Boolean): Boolean =
+        sdkInt < Build.VERSION_CODES.TIRAMISU && !alreadyTracked
+
+    fun settingsGuideDismissAction(
+        programmatic: Boolean,
+        confirmOpenedSettings: Boolean,
+    ): SettingsGuideDismissAction = when {
+        programmatic -> SettingsGuideDismissAction.IGNORE
+        confirmOpenedSettings -> SettingsGuideDismissAction.WAIT_SETTINGS
+        else -> SettingsGuideDismissAction.TRACK_REJECT
+    }
+}
+
+enum class SettingsGuideDismissAction { TRACK_REJECT, WAIT_SETTINGS, IGNORE }
+
+class SettingsGuideSession {
+    var awaitingSettingsResult = false
+        private set
+    private var reported = false
+
+    fun consumeDismiss(
+        programmatic: Boolean,
+        confirmOpenedSettings: Boolean,
+    ): Boolean? {
+        if (reported) return null
+        return when (
+            NotificationPermissionTracking.settingsGuideDismissAction(
+                programmatic,
+                confirmOpenedSettings,
+            )
+        ) {
+            SettingsGuideDismissAction.TRACK_REJECT -> {
+                reported = true
+                false
+            }
+            SettingsGuideDismissAction.WAIT_SETTINGS -> {
+                awaitingSettingsResult = true
+                null
+            }
+            SettingsGuideDismissAction.IGNORE -> null
+        }
+    }
+
+    fun consumeSettingsReturn(granted: Boolean): Boolean? {
+        if (!awaitingSettingsResult || reported) return null
+        awaitingSettingsResult = false
+        reported = true
+        return granted
+    }
+
+    fun restoreAwaiting(awaiting: Boolean) {
+        awaitingSettingsResult = awaiting
+    }
 }

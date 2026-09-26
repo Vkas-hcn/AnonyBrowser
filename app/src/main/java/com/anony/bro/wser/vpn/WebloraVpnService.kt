@@ -363,7 +363,7 @@ class AnonyBrowserVpnService : VpnService() {
     }
 
     private fun alertOnFirstShow() {
-        if (barAlerted) return
+        if (barAlerted || !canPostNotifications()) return
         barAlerted = true
         UpDataTool.trackEvent("news_notification_sent")
         runCatching { vibrateOnce() }.onFailure { Log.w(TAG, "vibrate failed", it) }

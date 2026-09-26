@@ -54,6 +54,7 @@ import com.anony.bro.wser.view.main.MainActivity.Companion.STATE_SELECTED_TAB
 import com.anony.bro.wser.view.settings.SettingsActivity
 import com.anony.bro.wser.view.guide.DefaultBrowserGuideActivity
 import com.anony.bro.wser.view.vpn.VpnActivity
+import com.anony.bro.wser.vpn.SettingsGuideSession
 import com.anony.bro.wser.vpn.VpnManager
 import com.anony.bro.wser.vpn.VpnPermissionHelper
 import java.util.UUID
@@ -78,6 +79,9 @@ class MainActivity :
     private var pendingSearchResultTabId: String? = null
     private var notificationSettingsGuideHandled = false
     private var notificationSettingsGuide: BottomSheetDialog? = null
+    private var confirmOpenedNotificationSettings = false
+    private var settingsGuideClosingProgrammatically = false
+    private val settingsGuideSession = SettingsGuideSession()
     private lateinit var homeFragment: HomeFragment
     private val tabSessionRepository by lazy { TabSessionRepository.get(this) }
     private val historyRepository by lazy { HistoryRepository.get(this) }
@@ -106,6 +110,7 @@ class MainActivity :
         setupFragments(savedInstanceState)
         setupBottomNav()
         setupBackHandling()
+        restoreNotificationSettingsGuideState(savedInstanceState)
         restoreTabs(savedInstanceState)
         handleIntent(intent)
         updateBottomNavState()
@@ -153,7 +158,14 @@ class MainActivity :
             ArrayList(tabs.map { it.loadState.name }),
         )
         outState.putBoolean(STATE_SHOWING_HOME, isShowingHome)
+        outState.putBoolean(STATE_NOTIF_GUIDE_HANDLED, notificationSettingsGuideHandled)
+        outState.putBoolean(STATE_AWAIT_NOTIF_SETTINGS, settingsGuideSession.awaitingSettingsResult)
         persistTabsAsync()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resolveNotificationSettingsGuideResult()
     }
 
     override fun onStop() {
@@ -162,6 +174,7 @@ class MainActivity :
     }
 
     override fun onDestroy() {
+        settingsGuideClosingProgrammatically = true
         notificationSettingsGuide?.dismiss()
         notificationSettingsGuide = null
         persistTabsAsync()
@@ -462,6 +475,8 @@ class MainActivity :
         ) return
 
         notificationSettingsGuideHandled = true
+        confirmOpenedNotificationSettings = false
+        settingsGuideClosingProgrammatically = false
         val dialog = BottomSheetDialog(this)
         val sheetBinding = BottomSheetNotificationPermissionBinding.inflate(layoutInflater)
         dialog.setContentView(sheetBinding.root)
@@ -471,18 +486,41 @@ class MainActivity :
             ?.setBackgroundResource(android.R.color.transparent)
         sheetBinding.btnCancel.setOnClickListener { dialog.dismiss() }
         sheetBinding.btnConfirm.setOnClickListener {
-            dialog.dismiss()
-            if (VpnPermissionHelper.openNotificationSettings(this)) {
+            confirmOpenedNotificationSettings = VpnPermissionHelper.openNotificationSettings(this)
+            if (confirmOpenedNotificationSettings) {
                 GateBrowserApplication.get().skipNextHotStart()
             }
+            dialog.dismiss()
         }
         notificationSettingsGuide = dialog
         dialog.setOnDismissListener {
             if (notificationSettingsGuide === dialog) {
                 notificationSettingsGuide = null
             }
+            val granted = settingsGuideSession.consumeDismiss(
+                programmatic = settingsGuideClosingProgrammatically || isChangingConfigurations,
+                confirmOpenedSettings = confirmOpenedNotificationSettings,
+            )
+            if (granted != null) {
+                VpnPermissionHelper.trackSettingsGuideResult(granted)
+            }
         }
         dialog.show()
+    }
+
+    private fun restoreNotificationSettingsGuideState(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) return
+        notificationSettingsGuideHandled = savedInstanceState.getBoolean(STATE_NOTIF_GUIDE_HANDLED)
+        settingsGuideSession.restoreAwaiting(
+            savedInstanceState.getBoolean(STATE_AWAIT_NOTIF_SETTINGS),
+        )
+    }
+
+    private fun resolveNotificationSettingsGuideResult() {
+        val granted = settingsGuideSession.consumeSettingsReturn(
+            VpnPermissionHelper.hasNotificationPermission(this),
+        ) ?: return
+        VpnPermissionHelper.trackSettingsGuideResult(granted)
     }
 
     override fun onBrowserTabsClick() {
@@ -1154,5 +1192,7 @@ class MainActivity :
         const val STATE_TAB_LOADING = "tab_loading"
         const val STATE_TAB_LOAD_STATES = "tab_load_states"
         const val STATE_SHOWING_HOME = "showing_home"
+        const val STATE_NOTIF_GUIDE_HANDLED = "notif_guide_handled"
+        const val STATE_AWAIT_NOTIF_SETTINGS = "await_notif_settings"
     }
 }
