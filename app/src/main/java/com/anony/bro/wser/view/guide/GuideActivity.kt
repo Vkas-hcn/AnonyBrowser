@@ -68,6 +68,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
     override val applySystemBarPadding: Boolean = false
 
     private var hasNavigatedToMain = false
+    private var splashSession = 0
     private var initialProgressCompleted = false
     private var notificationPermissionResolved = false
     private var notificationPermissionRequestInFlight = false
@@ -130,6 +131,23 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
         setIntent(intent)
         dismissVpnReminderIfOpened(intent)
         if (intent.getBooleanExtra(EXTRA_HOT_START, false)) {
+            restartSplashFlow()
+        }
+    }
+
+    private fun restartSplashFlow() {
+        splashSession++
+        clearStartupAdTimeout()
+        hasNavigatedToMain = false
+        startupAdFlowStarted = false
+        startupAdFlowCompleted = false
+        startupAdShowing = false
+        startupOpenAdState = StartupAdLoadState.NOT_STARTED
+        startupGuide1AdState = StartupAdLoadState.NOT_STARTED
+        startupGuide2AdState = StartupAdLoadState.NOT_STARTED
+        binding.progressIndicator.visibility = View.VISIBLE
+        if (umpFlowCompleted) {
+            startStartupOpenAdFlow()
             requestStartupNotificationPermission()
         }
     }
@@ -410,10 +428,21 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
             return
         }
         var showFailureReported = false
+        val session = splashSession
         val shown = AdMobManager.showGuideAdIfReady(this, object : AdShowListener {
-            override fun onAdShowed() = clearStartupAdTimeout()
+            override fun onAdShowed() {
+                if (session != splashSession) {
+                    startupAdShowing = false
+                    return
+                }
+                clearStartupAdTimeout()
+            }
 
             override fun onAdShowFailed(error: String) {
+                if (session != splashSession) {
+                    startupAdShowing = false
+                    return
+                }
                 showFailureReported = true
                 startupAdShowing = false
                 markStartupAdUnavailable(selectedAd)
@@ -422,7 +451,12 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
 
             override fun onAdClosed() {
                 startupAdShowing = false
-                finishStartupOpenAdFlow()
+                if (session != splashSession) return
+                startupAdHandler.post {
+                    if (session == splashSession && !hasNavigatedToMain) {
+                        finishStartupOpenAdFlow()
+                    }
+                }
             }
 
             override fun onAdClicked() = Unit
