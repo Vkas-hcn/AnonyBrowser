@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weblora</string>
+    <string name="app_name">Anony Browser</string>
     <string name="set_notification_title">Permitir notificaciones</string>
     <string name="set_notification_text">Recibe en tiempo real las últimas alertas de seguridad y privacidad.</string>
     <string name="set_notification_allow">Permitir</string>
@@ -12,7 +12,7 @@
     <string name="news_banner_title">Noticias destacadas</string>
     <string name="news_banner_empty">Las noticias no están disponibles ahora.</string>
     <string name="notification_open">Abrir</string>
-    <string name="set_browser_title">Establecer Weblora como navegador predeterminado</string>
+    <string name="set_browser_title">Establecer Anony Browser como navegador predeterminado</string>
     <string name="set_browser_allow">Establecer como predeterminado</string>
     <string name="set_browser_later">Más tarde</string>
     <string name="set_browser_already_default">Ya es el navegador predeterminado</string>
@@ -89,7 +89,7 @@
     <string name="history_expand">Expandir</string>
     <string name="history_collapse">Contraer</string>
     <string name="vpn_stats_empty_title">Aún no hay estadísticas</string>
-    <string name="vpn_stats_empty_message">Usa Weblora para ver aquí el informe del centro de seguridad y privacidad.</string>
+    <string name="vpn_stats_empty_message">Usa Anony Browser para ver aquí el informe del centro de seguridad y privacidad.</string>
     <string name="vpn_node_selection_title">Selección de nodo</string>
     <string name="vpn_node_switch_blocked">Desconéctate antes de cambiar de nodo.</string>
     <string name="vpn_nodes_empty_title">No hay servidores disponibles</string>

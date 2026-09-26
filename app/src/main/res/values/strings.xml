@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weblora</string>
+    <string name="app_name">Anony Browser</string>
     <string name="vpn_fgs_special_use_subtype" translatable="false">Persistent VPN protection status bar</string>
 
     <string name="cochannel_name" translatable="false">ActionBar For VPN</string>
@@ -47,7 +47,7 @@
     <string name="pop_m_8">See the newest local headlines</string>
     <string name="pop_m_9">Your daily news roundup is ready</string>
 
-    <string name="set_browser_title">Make Weblora your default browser</string>
+    <string name="set_browser_title">Make Anony Browser your default browser</string>
     <string name="set_browser_text">Setting it as your default browser centralizes your web activity, offering consistent features and settings across links. All to provide you a seamless experience.\n\nClick Set as Default button and select "Gate Browser" in the open dialog</string>
     <string name="set_browser_allow">Set as Default</string>
     <string name="set_browser_later">Later</string>
@@ -138,7 +138,7 @@
     <string name="history_collapse">Collapse</string>
 
     <string name="vpn_stats_empty_title">No Statistics Yet</string>
-    <string name="vpn_stats_empty_message">Start Using Weblora To See The Security &amp; Privacy Center Report Here.</string>
+    <string name="vpn_stats_empty_message">Start Using Anony Browser To See The Security &amp; Privacy Center Report Here.</string>
     <string name="vpn_node_selection_title">Node Selection</string>
     <string name="vpn_node_switch_blocked">Please disconnect before switching nodes.</string>
     <string name="vpn_nodes_empty_title">No servers available</string>

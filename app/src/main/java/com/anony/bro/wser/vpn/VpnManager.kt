@@ -63,7 +63,7 @@ object VpnManager {
     @Volatile var totalUpload: Long = 0L; private set
     @Volatile var totalDownload: Long = 0L; private set
 
-    internal var activeService: WebloraVpnService? = null
+    internal var activeService: AnonyBrowserVpnService? = null
 
     fun init(context: Context) {
         appContext = context.applicationContext
@@ -219,7 +219,7 @@ object VpnManager {
         stopConnectionTimer()
         activeService?.disconnect() ?: run {
             val ctx = appContext ?: return
-            ctx.stopService(Intent(ctx, WebloraVpnService::class.java))
+            ctx.stopService(Intent(ctx, AnonyBrowserVpnService::class.java))
             updateState(VpnState.DISCONNECTED)
         }
     }
@@ -321,7 +321,7 @@ object VpnManager {
         resetTraffic()
         updateState(VpnState.CONNECTING)
 
-        val serviceIntent = Intent(ctx, WebloraVpnService::class.java)
+        val serviceIntent = Intent(ctx, AnonyBrowserVpnService::class.java)
         if (notificationsEnabledForSession) {
             ContextCompat.startForegroundService(ctx, serviceIntent)
         } else {
@@ -336,7 +336,7 @@ object VpnManager {
         totalDownload = 0
     }
 
-    internal fun onServiceCreated(service: WebloraVpnService) {
+    internal fun onServiceCreated(service: AnonyBrowserVpnService) {
         activeService = service
     }
 

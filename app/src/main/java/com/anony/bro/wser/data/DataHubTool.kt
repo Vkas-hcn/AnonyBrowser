@@ -34,12 +34,12 @@ object DataHubTool {
     private val API_URL = if (BuildConfig.DEBUG) {
         "https://testserver.googletogoogle.com/api/dispatch"
     } else {
-        "https://api.realtictools.cc/api/dispatch"
+        ""
     }
     private val CLOAK_URL = if (BuildConfig.DEBUG) {
         "https://testserver.googletogoogle.com/api/cloak"
     } else {
-        "https://api.realtictools.cc/api/cloak"
+        ""
     }
     private const val PREFS_NAME = "data_hub_prefs"
     private const val KEY_VPN_DATA = "vpn_data"
@@ -55,14 +55,14 @@ object DataHubTool {
     private var refreshJob: Job? = null
     private var periodicRefreshJob: Job? = null
     private val requestFieldMapping = linkedMapOf(
-        "appName" to "cka5mb",
-        "version" to "4w9m5t",
-        "distinctId" to "uf1qbb",
-        "refer" to "5jed9k",
-        "language" to "y96k0h",
-        "osVersion" to "yd7yhk",
-        "gaid" to "cwecbt",
-        "phoneModel" to "mhjytr",
+            "appName" to "ym0cyq",
+            "version" to "9c5kuk",
+            "distinctId" to "w2glik",
+            "gaid" to "gvpjdg",
+            "phoneModel" to "hd9jt9",
+            "refer" to "63q172",
+            "language" to "cenkij",
+            "osVersion" to "wnvb5l"
     )
 
     @Volatile

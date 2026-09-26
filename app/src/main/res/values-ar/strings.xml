@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weblora</string>
+    <string name="app_name">Anony Browser</string>
     <string name="set_notification_title">السماح بالإشعارات</string>
     <string name="set_notification_text">ابقَ على اطلاع بآخر تنبيهات الأمان والخصوصية في الوقت الفعلي.</string>
     <string name="set_notification_allow">السماح</string>
@@ -12,7 +12,7 @@
     <string name="news_banner_title">أخبار رائجة</string>
     <string name="news_banner_empty">الأخبار غير متاحة الآن.</string>
     <string name="notification_open">فتح</string>
-    <string name="set_browser_title">تعيين Weblora كمتصفحك الافتراضي</string>
+    <string name="set_browser_title">تعيين Anony Browser كمتصفحك الافتراضي</string>
     <string name="set_browser_allow">تعيين كافتراضي</string>
     <string name="set_browser_later">لاحقًا</string>
     <string name="set_browser_already_default">تم تعيينه كمتصفح افتراضي</string>
@@ -89,7 +89,7 @@
     <string name="history_expand">توسيع</string>
     <string name="history_collapse">طي</string>
     <string name="vpn_stats_empty_title">لا توجد إحصاءات بعد</string>
-    <string name="vpn_stats_empty_message">استخدم Weblora لرؤية تقرير مركز الأمان والخصوصية هنا.</string>
+    <string name="vpn_stats_empty_message">استخدم Anony Browser لرؤية تقرير مركز الأمان والخصوصية هنا.</string>
     <string name="vpn_node_selection_title">اختيار العقدة</string>
     <string name="vpn_node_switch_blocked">يرجى قطع الاتصال قبل تبديل العقد.</string>
     <string name="vpn_nodes_empty_title">لا توجد خوادم متاحة</string>

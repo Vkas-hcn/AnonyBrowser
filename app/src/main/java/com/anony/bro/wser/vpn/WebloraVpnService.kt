@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
  * 保活/拉活参考 UltraClean 常驻栏做法：START_STICKY + 开机/前台/任务移除拉起。
  */
 @SuppressLint("VpnServicePolicy")
-class WebloraVpnService : VpnService() {
+class AnonyBrowserVpnService : VpnService() {
 
     companion object {
         private const val TAG = "BoxVpnService"
@@ -161,7 +161,7 @@ class WebloraVpnService : VpnService() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         Log.i(TAG, "lifecycle onTaskRemoved: pid=${Process.myPid()}; scheduling service restart")
         runCatching {
-            val restartIntent = Intent(applicationContext, WebloraVpnService::class.java)
+            val restartIntent = Intent(applicationContext, AnonyBrowserVpnService::class.java)
                 .setAction(ACTION_SHOW_BAR)
             val flags = PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
             val pendingIntent = PendingIntent.getForegroundService(this, 1, restartIntent, flags)
@@ -317,7 +317,7 @@ class WebloraVpnService : VpnService() {
     }
 
     private suspend fun refreshNews() {
-        VpnNewsContentRepository.nextContent(this@WebloraVpnService)?.let {
+        VpnNewsContentRepository.nextContent(this@AnonyBrowserVpnService)?.let {
             currentNews = it
             refreshBar()
         }

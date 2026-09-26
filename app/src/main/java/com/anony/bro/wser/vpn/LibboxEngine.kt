@@ -23,7 +23,7 @@ import java.security.KeyStore
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-internal class LibboxEngine(private val vpnService: WebloraVpnService) {
+internal class LibboxEngine(private val vpnService: AnonyBrowserVpnService) {
 
     companion object {
         private const val TAG = "LibboxEngine"

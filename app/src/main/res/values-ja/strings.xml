@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weblora</string>
+    <string name="app_name">Anony Browser</string>
     <string name="set_notification_title">通知を許可</string>
     <string name="set_notification_text">最新のセキュリティとプライバシー通知をリアルタイムで受け取れます。</string>
     <string name="set_notification_allow">許可</string>

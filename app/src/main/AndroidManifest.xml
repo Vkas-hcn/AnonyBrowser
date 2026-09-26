@@ -118,7 +118,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".vpn.WebloraVpnService"
+            android:name=".vpn.AnonyBrowserVpnService"
             android:exported="false"
             android:foregroundServiceType="specialUse"
             android:permission="android.permission.BIND_VPN_SERVICE">

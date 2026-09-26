@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weblora</string>
+    <string name="app_name">Anony Browser</string>
     <string name="demo_title">MVVM 架構示範</string>
     <string name="demo_status_idle">就緒</string>
     <string name="demo_vpn_disconnected">VPN：未連線</string>
@@ -51,7 +51,7 @@
     <string name="pop_m_8">查看最新本地頭條</string>
     <string name="pop_m_9">每日新聞摘要已準備好</string>
 
-    <string name="set_browser_title">將 Weblora 設為預設瀏覽器</string>
+    <string name="set_browser_title">將 Anony Browser 設為預設瀏覽器</string>
     <string name="set_browser_text">將其設為預設瀏覽器後，您可以集中管理網頁活動，並在開啟連結時使用一致的功能與設定，享受順暢體驗。\n\n點選「設為預設」按鈕，然後在開啟的對話方塊中選取「Gate Browser」</string>
     <string name="set_browser_allow">設為預設</string>
     <string name="set_browser_later">稍後</string>
@@ -135,7 +135,7 @@
     <string name="history_collapse">收合</string>
 
     <string name="vpn_stats_empty_title">尚無統計資料</string>
-    <string name="vpn_stats_empty_message">開始使用 Weblora，即可在這裡查看安全性與隱私權中心報告。</string>
+    <string name="vpn_stats_empty_message">開始使用 Anony Browser，即可在這裡查看安全性與隱私權中心報告。</string>
     <string name="vpn_node_selection_title">節點選擇</string>
     <string name="vpn_node_switch_blocked">切換節點前請先中斷連線。</string>
     <string name="vpn_nodes_empty_title">沒有可用的伺服器</string>
