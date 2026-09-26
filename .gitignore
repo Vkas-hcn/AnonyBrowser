@@ -18,3 +18,4 @@ local.properties
 /app/release
 /test/
 /app/src/androidTest/
+/app/src/test/

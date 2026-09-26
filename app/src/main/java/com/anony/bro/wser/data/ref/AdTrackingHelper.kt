@@ -45,105 +45,105 @@ object AdTrackingHelper {
         const val REWARDED = "rewarded"
     }
 
-//    /**
-//     * 上报广告请求（AdMob 聚合）
-//     */
-//    fun trackAdRequestGMA(
-//        adType: String,
-//        posId: String
-//    ): String {
-//        val adId = UUID.randomUUID().toString()
-//        TrackSDK.trackAdRequest(adType, posId, "AdMob", adId)
-//        return adId
-//    }
-//
-//    /**
-//     * 上报广告填充成功（显式传入来源，适配 AdMob）
-//     */
-//    fun trackAdFilledWithSource(
-//        adType: String,
-//        posId: String,
-//        adId: String,
-//        sdkName: String,
-//        adSource: String,
-//        duration: Long
-//    ) {
-//        TrackSDK.trackAdFilled(adType, posId, sdkName, adId, adSource, duration)
-//    }
-//
-//    /**
-//     * 上报广告填充失败
-//     * @param adType 广告类型
-//     * @param posId 位置ID
-//     * @param adId 唯一请求ID
-//     * @param errCode 错误码
-//     * @param errMsg 错误描述
-//     */
-//    fun trackAdFailed(
-//        adType: String,
-//        posId: String,
-//        adId: String,
-//        errCode: String,
-//        errMsg: String
-//    ) {
-//        // 将 errCode 转换为 Int，如果转换失败使用 -1
-//        val errCodeInt = errCode.toIntOrNull() ?: -1
-//        TrackSDK.trackAdFailed(adType, posId, "AdMob", adId, errCodeInt, errMsg)
-//    }
-//
-//    /**
-//     * 上报广告展示（显式传入来源，适配 AdMob）
-//     */
-//    fun trackAdImpressionWithSource(
-//        adType: String,
-//        posId: String,
-//        adId: String,
-//        sdkName: String,
-//        adSource: String,
-//        isVisiblePct: Int = 100,
-//        scene: String = ""
-//    ) {
-//        TrackSDK.trackAdImpression(
-//            adType,
-//            posId,
-//            sdkName,
-//            adId,
-//            adSource,
-//            isVisiblePct.toFloat(),
-//            scene
-//        )
-//    }
-//
-//    /**
-//     * 上报广告点击（显式传入来源，适配 AdMob）
-//     */
-//    fun trackAdClickWithSource(
-//        adType: String,
-//        posId: String,
-//        adId: String,
-//        sdkName: String,
-//        adSource: String,
-//        clickArea: String = ""
-//    ) {
-//        TrackSDK.trackAdClick(adType, posId, sdkName, adId, adSource, clickArea)
-//    }
-//
-//    /**
-//     * 上报广告关闭
-//     * @param adType 广告类型
-//     * @param posId 位置ID
-//     * @param adId 唯一请求ID
-//     * @param stayDuration 展示多少秒后关闭
-//     */
-//    fun trackAdClose(
-//        adType: String,
-//        posId: String,
-//        adId: String,
-//        stayDuration: Long
-//    ) {
-//        TrackSDK.trackAdClose(adType, posId, adId, stayDuration)
-//        GateBrowserApplication.get().flushTrackEvents()
-//    }
+    /**
+     * 上报广告请求（AdMob 聚合）
+     */
+    fun trackAdRequestGMA(
+        adType: String,
+        posId: String
+    ): String {
+        val adId = UUID.randomUUID().toString()
+        TrackSDK.trackAdRequest(adType, posId, "AdMob", adId)
+        return adId
+    }
+
+    /**
+     * 上报广告填充成功（显式传入来源，适配 AdMob）
+     */
+    fun trackAdFilledWithSource(
+        adType: String,
+        posId: String,
+        adId: String,
+        sdkName: String,
+        adSource: String,
+        duration: Long
+    ) {
+        TrackSDK.trackAdFilled(adType, posId, sdkName, adId, adSource, duration)
+    }
+
+    /**
+     * 上报广告填充失败
+     * @param adType 广告类型
+     * @param posId 位置ID
+     * @param adId 唯一请求ID
+     * @param errCode 错误码
+     * @param errMsg 错误描述
+     */
+    fun trackAdFailed(
+        adType: String,
+        posId: String,
+        adId: String,
+        errCode: String,
+        errMsg: String
+    ) {
+        // 将 errCode 转换为 Int，如果转换失败使用 -1
+        val errCodeInt = errCode.toIntOrNull() ?: -1
+        TrackSDK.trackAdFailed(adType, posId, "AdMob", adId, errCodeInt, errMsg)
+    }
+
+    /**
+     * 上报广告展示（显式传入来源，适配 AdMob）
+     */
+    fun trackAdImpressionWithSource(
+        adType: String,
+        posId: String,
+        adId: String,
+        sdkName: String,
+        adSource: String,
+        isVisiblePct: Int = 100,
+        scene: String = ""
+    ) {
+        TrackSDK.trackAdImpression(
+            adType,
+            posId,
+            sdkName,
+            adId,
+            adSource,
+            isVisiblePct.toFloat(),
+            scene
+        )
+    }
+
+    /**
+     * 上报广告点击（显式传入来源，适配 AdMob）
+     */
+    fun trackAdClickWithSource(
+        adType: String,
+        posId: String,
+        adId: String,
+        sdkName: String,
+        adSource: String,
+        clickArea: String = ""
+    ) {
+        TrackSDK.trackAdClick(adType, posId, sdkName, adId, adSource, clickArea)
+    }
+
+    /**
+     * 上报广告关闭
+     * @param adType 广告类型
+     * @param posId 位置ID
+     * @param adId 唯一请求ID
+     * @param stayDuration 展示多少秒后关闭
+     */
+    fun trackAdClose(
+        adType: String,
+        posId: String,
+        adId: String,
+        stayDuration: Long
+    ) {
+        TrackSDK.trackAdClose(adType, posId, adId, stayDuration)
+        GateBrowserApplication.get().flushTrackEvents()
+    }
 
 
     fun trackAdRevenueAdjust(
@@ -228,12 +228,6 @@ object AdTrackingHelper {
         }.onFailure {
             Log.e(TAG, "trackRevenueEvent Firebase failed: $event", it)
         }
-        //Adjust
-        runCatching {
-            adjustPoint(event, revenue, currencyCode)
-        }.onFailure {
-            Log.e(TAG, "trackRevenueEvent Adjust failed: $event", it)
-        }
         //BI
         runCatching {
             TrackSDK.trackAdRevenue(revenue)
@@ -296,38 +290,11 @@ object AdTrackingHelper {
         currencyCode: String = "USD"
     ) {
         putFirebaseAdRevenue(context, event, revenue, currencyCode)
-        adjustPoint(event, revenue, currencyCode)
         runCatching {
             TrackSDK.track(event, null, TrackPolicy.IMMEDIATE)
             Log.d(TAG, "trackValueEvent: $event revenue=$revenue currency=$currencyCode")
         }.onFailure {
             Log.e(TAG, "trackValueEvent failed: $event", it)
-        }
-    }
-
-
-    fun adjustPoint(
-        key: String,
-        revenue: Double? = null,
-        currencyCode: String? = null,
-    ) {
-        val token = adjustTokenFor(key)
-        runCatching {
-            val adjustEvent = AdjustEvent(token)
-            if (revenue != null && currencyCode != null) {
-                adjustEvent.setRevenue(revenue, currencyCode)
-            }
-            Adjust.trackEvent(adjustEvent)
-        }.onFailure {
-            Log.e(TAG, "adjustPoint failed: $key", it)
-        }
-    }
-
-    private fun adjustTokenFor(key: String): String? {
-        return when (key) {
-            "ad_impression_revenue" -> "4rfcdo"
-            "total_ads_revenue_001" -> "g06m0y"
-            else -> null
         }
     }
 

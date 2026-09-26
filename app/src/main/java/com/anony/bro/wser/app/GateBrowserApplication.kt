@@ -72,6 +72,10 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
         )
         instance = this
         initTrackSdk()
+        // BI（TrackSDK）已同步初始化完成，触发 BI 平台缓存补发。
+        UpDataTool.onBiInitialized()
+        // Firebase 通过其 ContentProvider 在进程启动时自动初始化，此处标记并触发补发。
+        UpDataTool.onFirebaseInitialized()
         registerActivityLifecycleCallbacks(HotStartActivityCallbacks())
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         VpnManager.init(applicationContext)
@@ -98,6 +102,7 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
         // 应用回到前台时确保 VPN 常驻栏存活（前台启动，规避后台 FGS 启动限制）。
         VpnBarLauncher.ensureRunning(this)
         flushTrackEvents()
+        UpDataTool.purgeExpiredCache()
         if (skipNextHotStart) {
             skipNextHotStart = false
             hotStartReady = false
@@ -107,6 +112,10 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
         if (!hotStartReady) return
 
         hotStartReady = false
+        if (topActivity?.get() is GuideActivity) {
+            Log.d(TAG, "Hot start skipped: GuideActivity already in foreground")
+            return
+        }
         if (VpnManager.state == VpnState.CONNECTING || VpnManager.state == VpnState.DISCONNECTING) {
             Log.d(TAG, "Hot start skipped while VPN is ${VpnManager.state}")
             return

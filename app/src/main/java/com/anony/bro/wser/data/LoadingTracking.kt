@@ -12,17 +12,17 @@ object LoadingTracking {
     const val KEY_SOURCE = "source"
     const val KEY_APP_FIRST_OPEN = "app_first_open"
     const val EXTRA_FROM_FCM = "extra_from_fcm"
+    const val EXTRA_FROM_SYSTEM = "extra_from_system_notification"
 
     private const val PREFS_NAME = "loading_tracking"
     private const val KEY_HAS_OPENED = "has_opened"
 
     fun resolveSource(
         fromFcm: Boolean,
-        fromVpnReminder: Boolean,
-        hasNewsShowType: Boolean,
+        fromSystemNotification: Boolean,
     ): String = when {
         fromFcm -> SOURCE_FCM
-        fromVpnReminder || hasNewsShowType -> SOURCE_SYSTEM
+        fromSystemNotification -> SOURCE_SYSTEM
         else -> SOURCE_OTHER
     }
 

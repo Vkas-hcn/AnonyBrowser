@@ -575,11 +575,15 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
         runCatching {
             val source = LoadingTracking.resolveSource(
                 fromFcm = intent.getBooleanExtra(LoadingTracking.EXTRA_FROM_FCM, false),
-                fromVpnReminder = intent.getBooleanExtra(
-                    VpnReminderNotifier.EXTRA_OPENED_FROM_VPN_REMINDER,
+                fromSystemNotification = intent.getBooleanExtra(
+                    LoadingTracking.EXTRA_FROM_SYSTEM,
                     false,
-                ),
-                hasNewsShowType = intent.hasExtra(HintUtil.CO_SHOW_TYPE),
+                ) ||
+                    intent.getBooleanExtra(
+                        VpnReminderNotifier.EXTRA_OPENED_FROM_VPN_REMINDER,
+                        false,
+                    ) ||
+                    intent.hasExtra(HintUtil.CO_SHOW_TYPE),
             )
             UpDataTool.trackEvent(
                 LoadingTracking.EVENT,

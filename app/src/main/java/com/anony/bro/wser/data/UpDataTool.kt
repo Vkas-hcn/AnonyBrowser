@@ -1,14 +1,17 @@
 package com.anony.bro.wser.data
 
 
-import android.os.Bundle
 import android.util.Log
 import com.adjust.sdk.Adjust
 import com.adjust.sdk.AdjustEvent
-import com.flux.tracksdk.core.TrackSDK
-import com.flux.tracksdk.model.TrackPolicy
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.anony.bro.wser.app.GateBrowserApplication
+import com.anony.bro.wser.data.track.PendingTrackEvent
+import com.anony.bro.wser.data.track.SharedPrefsTrackEventPersistence
+import com.anony.bro.wser.data.track.TrackEventCacheManager
+import com.anony.bro.wser.data.track.TrackEventStore
+import com.anony.bro.wser.data.track.TrackLogger
+import com.anony.bro.wser.data.track.TrackPlatform
+import com.anony.bro.wser.data.track.TrackSdkUploaders
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,15 +23,86 @@ object UpDataTool {
 
     private val trackingScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    private val androidLogger = TrackLogger { level, message, error ->
+        when (level) {
+            TrackLogger.Level.DEBUG -> Log.d(TAG, message)
+            TrackLogger.Level.WARN -> Log.w(TAG, message, error)
+            TrackLogger.Level.ERROR -> Log.e(TAG, message, error)
+        }
+    }
+
+    /**
+     * 埋点缓存补发系统入口。首次访问时基于 SharedPreferences 构建持久化缓存，
+     * 并根据当前 SDK 状态恢复初始化标记（页面/进程重建场景下 SDK 可能已就绪）。
+     */
+    private val manager: TrackEventCacheManager by lazy {
+        val context = GateBrowserApplication.get().applicationContext
+        val store = TrackEventStore(
+            persistence = SharedPrefsTrackEventPersistence(context),
+            logger = androidLogger,
+        )
+        TrackEventCacheManager(
+            store = store,
+            uploaders = mapOf(
+                TrackPlatform.BI to TrackSdkUploaders.bi(),
+                TrackPlatform.FIREBASE to TrackSdkUploaders.firebase(context),
+            ),
+            backoff = { attempt -> runCatching { Thread.sleep(minOf(attempt * 500L, 2_000L)) } },
+            logger = androidLogger,
+        ).also { mgr ->
+            val biReady = TrackSdkUploaders.isBiInitialized()
+            val firebaseReady = TrackSdkUploaders.isFirebaseInitialized(context)
+            Log.d(TAG, "SDK init status on build: BI initialized=$biReady, Firebase initialized=$firebaseReady")
+            if (biReady) mgr.markInitialized(TrackPlatform.BI)
+            if (firebaseReady) mgr.markInitialized(TrackPlatform.FIREBASE)
+        }
+    }
+
     fun trackEvent(
         event: String,
         properties: Map<String, String>? = null,
     ) {
         trackingScope.launch {
-            firebasePoint(event, properties)
-            TrackSDK.track(event, properties?.let { HashMap<String, Any>(it) }, TrackPolicy.IMMEDIATE)
-            Log.d(TAG, "trackEvent: $event properties=$properties")
+            manager.track(
+                event = event,
+                properties = properties.orEmpty(),
+                eventType = PendingTrackEvent.TYPE_CUSTOM,
+            )
         }
+    }
+
+    /** BI SDK（TrackSDK）初始化完成后调用，校验并打印初始化状态，成功则触发 BI 平台缓存补发。 */
+    fun onBiInitialized() {
+        trackingScope.launch {
+            val ready = TrackSdkUploaders.isBiInitialized()
+            Log.d(TAG, "SDK init status: BI initialized=$ready")
+            if (ready) {
+                val result = manager.markInitialized(TrackPlatform.BI)
+                Log.d(TAG, "BI init success, replay result=$result")
+            } else {
+                Log.w(TAG, "BI init not ready, skip replay")
+            }
+        }
+    }
+
+    /** Firebase 初始化完成后调用，校验并打印初始化状态，成功则触发 Firebase 平台缓存补发。 */
+    fun onFirebaseInitialized() {
+        trackingScope.launch {
+            val context = GateBrowserApplication.get().applicationContext
+            val ready = TrackSdkUploaders.isFirebaseInitialized(context)
+            Log.d(TAG, "SDK init status: Firebase initialized=$ready")
+            if (ready) {
+                val result = manager.markInitialized(TrackPlatform.FIREBASE)
+                Log.d(TAG, "Firebase init success, replay result=$result")
+            } else {
+                Log.w(TAG, "Firebase init not ready, skip replay")
+            }
+        }
+    }
+
+    /** 主动清理过期缓存（>7 天），可在应用进入前台等时机调用。 */
+    fun purgeExpiredCache() {
+        trackingScope.launch { manager.purgeExpired() }
     }
 
     fun adjustPoint(
@@ -40,18 +114,6 @@ object UpDataTool {
             Adjust.trackEvent(adjustEvent)
         }.onFailure {
             Log.e(TAG, "adjustPoint failed: $key", it)
-        }
-    }
-
-    private fun firebasePoint(event: String, properties: Map<String, String>?) {
-        runCatching {
-            val context = GateBrowserApplication.get()
-            val bundle = properties?.takeIf { it.isNotEmpty() }?.let { map ->
-                Bundle().apply { map.forEach { (key, value) -> putString(key, value) } }
-            }
-            FirebaseAnalytics.getInstance(context).logEvent(event, bundle)
-        }.onFailure {
-            Log.e(TAG, "firebasePoint failed: $event", it)
         }
     }
 

@@ -27,6 +27,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.anony.bro.wser.R
+import com.anony.bro.wser.data.LoadingTracking
 import com.anony.bro.wser.data.UpDataTool
 import com.anony.bro.wser.hellohello.NoticeConfigStore
 import com.anony.bro.wser.view.guide.GuideActivity
@@ -271,6 +272,7 @@ class AnonyBrowserVpnService : VpnService() {
 
     private fun createContentIntent(url: String?): PendingIntent {
         val intent = GuideActivity.createHotStartIntent(this).apply {
+            putExtra(LoadingTracking.EXTRA_FROM_SYSTEM, true)
             if (!url.isNullOrBlank()) {
                 action = Intent.ACTION_VIEW
                 data = Uri.parse(url)
