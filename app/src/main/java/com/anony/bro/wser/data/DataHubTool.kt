@@ -45,16 +45,20 @@ object DataHubTool {
     private const val PREFS_NAME = "data_hub_prefs"
     private const val KEY_VPN_DATA = "vpn_data"
     private const val KEY_LAST_REQUEST_TIME = "last_dispatch_request_time"
+    private const val KEY_CLOAK_REPORTED = "cloak_reported"
     private const val REFERRER_READ_INTERVAL_MS = 1_000L
     private const val REFERRER_WAIT_TIMEOUT_MS = 10_000L
     private const val CONNECT_TIMEOUT_MS = 15_000
     private const val READ_TIMEOUT_MS = 15_000
-    internal const val REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1_000L
+    internal const val REFRESH_INTERVAL_MS = 3 * 60 * 60 * 1_000L
     private const val DISPATCH_RETRY_COUNT = 3
     private const val DISPATCH_RETRY_INTERVAL_MS = 10_000L
+    private const val CLOAK_RETRY_COUNT = 10
+    private const val CLOAK_RETRY_INTERVAL_MS = 10_000L
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val refreshMutex = Mutex()
+    private val cloakMutex = Mutex()
     private val vpnDataListeners = CopyOnWriteArraySet<() -> Unit>()
     private val requestFieldMapping = linkedMapOf(
             "appName" to "ym0cyq",
@@ -83,24 +87,24 @@ object DataHubTool {
         val appContext = context.applicationContext
         Log.d(TAG, "init: start")
         loadCachedVpnData(appContext)
-        launchRefresh(appContext, "init", shouldRequestCloak = true)
+        reportCloakIfNeeded(appContext)
+        launchRefresh(appContext, "init")
         DispatchRefreshWorker.schedule(appContext, nextRefreshDelayMs(appContext))
     }
 
     fun refreshAsync(context: Context) {
         Log.d(TAG, "refreshAsync: requested")
-        launchRefresh(context.applicationContext, "refreshAsync", shouldRequestCloak = false)
+        launchRefresh(context.applicationContext, "refreshAsync")
     }
 
     private fun launchRefresh(
         context: Context,
         source: String,
-        shouldRequestCloak: Boolean,
         allowWhenNoConfig: Boolean = true,
     ) {
         val appContext = context.applicationContext
         scope.launch {
-            refreshIfDue(appContext, source, shouldRequestCloak, allowWhenNoConfig)
+            refreshIfDue(appContext, source, allowWhenNoConfig)
         }
     }
 
@@ -108,7 +112,6 @@ object DataHubTool {
         refreshIfDue(
             context.applicationContext,
             "worker",
-            shouldRequestCloak = false,
             allowWhenNoConfig = false,
         )
     }
@@ -116,7 +119,6 @@ object DataHubTool {
     private suspend fun refreshIfDue(
         context: Context,
         source: String,
-        shouldRequestCloak: Boolean,
         allowWhenNoConfig: Boolean,
     ) = refreshMutex.withLock {
         val now = System.currentTimeMillis()
@@ -133,7 +135,7 @@ object DataHubTool {
 
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit { putLong(KEY_LAST_REQUEST_TIME, now) }
-        refreshVpnData(context, shouldRequestCloak)
+        refreshVpnData(context)
     }
 
     private fun hasVpnConfig(): Boolean = vpnData != EMPTY_VPN_DATA
@@ -177,7 +179,7 @@ object DataHubTool {
         }
     }
 
-    private suspend fun refreshVpnData(context: Context, shouldRequestCloak: Boolean) {
+    private suspend fun refreshVpnData(context: Context) {
         Log.d(TAG, "refresh: start")
         val setup = runCatching {
             Log.d(TAG, "referrer: resolving")
@@ -186,10 +188,6 @@ object DataHubTool {
 
             val payload = buildRequestPayload(context, referrer)
             Log.d(TAG, "request: payload=$payload")
-
-            if (shouldRequestCloak) {
-                requestCloak(payload)
-            }
             payload
         }.onFailure {
             Log.w(TAG, "Prepare dispatch request failed: ${it.message}", it)
@@ -281,19 +279,73 @@ object DataHubTool {
             }.getOrDefault("")
         }
 
-    private suspend fun requestCloak(payload: String) {
-        runCatching {
-            val response = postCloak(payload)
-            Log.d(TAG, "cloak: response body=$response")
-            when (val validation = validateCloakResponse(response)) {
-                ValidationResult.Valid -> Log.d(TAG, "cloak: success")
-                is ValidationResult.Invalid -> {
-                    Log.w(TAG, "cloak: invalid response, reason=${validation.reason}")
-                }
-            }
-        }.onFailure {
-            Log.w(TAG, "cloak request failed: ${it.message}", it)
+    /**
+     * Cloak 上报：每次安装仅需成功一次。
+     * 成功即持久化标志，后续冷启动跳过；未成功则本次最多重试 10 次（间隔 10s），
+     * 全部失败后不持久化标志，等待下次冷启动补报。
+     */
+    private fun reportCloakIfNeeded(context: Context) {
+        if (isCloakReported(context)) {
+            Log.d(TAG, "cloak: already reported, skip")
+            return
         }
+        scope.launch {
+            cloakMutex.withLock {
+                if (isCloakReported(context)) {
+                    Log.d(TAG, "cloak: already reported, skip")
+                    return@withLock
+                }
+
+                val payload = runCatching {
+                    val referrer = awaitReferrer(context)
+                    buildRequestPayload(context, referrer)
+                }.onFailure {
+                    Log.w(TAG, "cloak: build payload failed: ${it.message}", it)
+                }.getOrNull() ?: return@withLock
+
+                repeat(CLOAK_RETRY_COUNT) { attempt ->
+                    val success = runCatching {
+                        val response = postCloak(payload)
+                        Log.d(TAG, "cloak: response body=$response")
+                        when (val validation = validateCloakResponse(response)) {
+                            ValidationResult.Valid -> true
+                            is ValidationResult.Invalid -> {
+                                Log.w(TAG, "cloak: invalid response, reason=${validation.reason}")
+                                false
+                            }
+                        }
+                    }.onFailure {
+                        Log.w(
+                            TAG,
+                            "cloak request failed, attempt=${attempt + 1}/$CLOAK_RETRY_COUNT: ${it.message}",
+                            it,
+                        )
+                    }.getOrDefault(false)
+
+                    if (success) {
+                        markCloakReported(context)
+                        Log.d(TAG, "cloak: success, attempt=${attempt + 1}")
+                        return@withLock
+                    }
+                    if (attempt < CLOAK_RETRY_COUNT - 1) {
+                        delay(CLOAK_RETRY_INTERVAL_MS.milliseconds)
+                    }
+                }
+                Log.w(
+                    TAG,
+                    "cloak: stopped after $CLOAK_RETRY_COUNT failed attempts, will retry on next cold start",
+                )
+            }
+        }
+    }
+
+    private fun isCloakReported(context: Context): Boolean =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean(KEY_CLOAK_REPORTED, false)
+
+    private fun markCloakReported(context: Context) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit { putBoolean(KEY_CLOAK_REPORTED, true) }
     }
 
     private suspend fun postCloak(payload: String): String =
