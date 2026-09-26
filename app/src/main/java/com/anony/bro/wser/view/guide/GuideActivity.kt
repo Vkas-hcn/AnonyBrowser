@@ -38,6 +38,7 @@ import com.anony.bro.wser.base.BaseActivity
 import com.anony.bro.wser.ads.AdLoadListener
 import com.anony.bro.wser.ads.AdMobManager
 import com.anony.bro.wser.ads.AdShowListener
+import com.anony.bro.wser.data.LoadingTracking
 import com.anony.bro.wser.data.UpDataTool
 import com.anony.bro.wser.data.guide.LeadStore
 import com.anony.bro.wser.databinding.ActivityGuideBinding
@@ -112,6 +113,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        trackLoadingShow(intent)
         rememberNotificationLaunch(this.intent)
         rememberNotificationLaunch(intent)
         if (openAfterGuideFromVpnReminder) {
@@ -133,6 +135,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
+        trackLoadingShow(intent)
         rememberNotificationLaunch(intent)
         dismissVpnReminderIfOpened(intent)
         setupImmersiveStatusBar()
@@ -532,6 +535,28 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
         defaultBrowserGuideLauncher.launch(
             DefaultBrowserGuideActivity.createIntent(this, blocking = true),
         )
+    }
+
+    private fun trackLoadingShow(intent: Intent) {
+        runCatching {
+            val source = LoadingTracking.resolveSource(
+                fromFcm = intent.getBooleanExtra(LoadingTracking.EXTRA_FROM_FCM, false),
+                fromVpnReminder = intent.getBooleanExtra(
+                    VpnReminderNotifier.EXTRA_OPENED_FROM_VPN_REMINDER,
+                    false,
+                ),
+                hasNewsShowType = intent.hasExtra(HintUtil.CO_SHOW_TYPE),
+            )
+            UpDataTool.trackEvent(
+                LoadingTracking.EVENT,
+                LoadingTracking.contextParams(
+                    source = source,
+                    firstOpen = LoadingTracking.consumeIsFirstOpen(this),
+                ),
+            )
+        }.onFailure {
+            Log.w(TAG, "loading_show failed: ${it.message}", it)
+        }
     }
 
     private fun rememberNotificationLaunch(intent: Intent) {

@@ -46,6 +46,7 @@ object DataHubTool {
     private const val KEY_VPN_DATA = "vpn_data"
     private const val KEY_LAST_REQUEST_TIME = "last_dispatch_request_time"
     private const val KEY_CLOAK_REPORTED = "cloak_reported"
+    private const val KEY_ACTIVATED_REPORTED = "activated_reported"
     private const val REFERRER_READ_INTERVAL_MS = 1_000L
     private const val REFERRER_WAIT_TIMEOUT_MS = 10_000L
     private const val CONNECT_TIMEOUT_MS = 15_000
@@ -193,6 +194,9 @@ object DataHubTool {
             Log.w(TAG, "Prepare dispatch request failed: ${it.message}", it)
         }.getOrNull() ?: return
 
+        runCatching { UpDataTool.trackEvent("biconfig_request") }
+            .onFailure { Log.w(TAG, "biconfig_request failed: ${it.message}", it) }
+
         repeat(DISPATCH_RETRY_COUNT + 1) { attempt ->
             val result = runCatching {
                 val response = postDispatch(setup)
@@ -208,6 +212,7 @@ object DataHubTool {
                 vpnData = response
                 initializeFacebookFromVpnData(context, response)
                 notifyVpnDataUpdated()
+                trackActivatedIfNeeded(context, response)
                 Log.d(TAG, "refresh: success, vpn data persisted, attempt=${attempt + 1}")
                 return
             }
@@ -398,6 +403,31 @@ object DataHubTool {
             Log.d(TAG, "$label request: disconnect")
             connection.disconnect()
         }
+    }
+
+    internal fun isAcquiredUser(raw: String): Boolean = runCatching {
+        val root = JSONObject(raw)
+        val data = root.optJSONObject("data") ?: root
+        data.optBoolean("isAcquiredUser", false)
+    }.getOrDefault(false)
+
+    private fun trackActivatedIfNeeded(context: Context, raw: String) {
+        runCatching {
+            if (!isAcquiredUser(raw) || isActivatedReported(context)) return
+            markActivatedReported(context)
+            UpDataTool.trackEvent("activated")
+        }.onFailure {
+            Log.w(TAG, "activated failed: ${it.message}", it)
+        }
+    }
+
+    private fun isActivatedReported(context: Context): Boolean =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean(KEY_ACTIVATED_REPORTED, false)
+
+    private fun markActivatedReported(context: Context) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit { putBoolean(KEY_ACTIVATED_REPORTED, true) }
     }
 
     private fun persistVpnData(context: Context, raw: String) {
