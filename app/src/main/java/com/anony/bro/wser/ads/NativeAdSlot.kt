@@ -9,7 +9,9 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.anony.bro.wser.ads.AdState
 import com.anony.bro.wser.ads.AdUnit
+import com.anony.bro.wser.data.ref.AdTrackInfo
 import com.anony.bro.wser.data.ref.AdTrackingHelper
+import com.anony.bro.wser.data.ref.AdTrackingHooks
 import com.anony.bro.wser.vpn.VpnState
 
 /**
@@ -41,6 +43,12 @@ class NativeAdSlot(
     @Volatile
     private var displayedShowStartMs: Long = 0L
 
+    @Volatile
+    private var preloadedTrackInfo: AdTrackInfo? = null
+
+    @Volatile
+    private var displayedTrackInfo: AdTrackInfo? = null
+
     fun getState(): AdState = adState
 
     fun isLoadedForIp(ipKey: String): Boolean {
@@ -61,6 +69,8 @@ class NativeAdSlot(
     fun acquireAdForDisplay(ipKey: String): NativeAd? {
         val wrapper = cache.getWrapper() ?: return null
         displayedWrapper = wrapper
+        displayedTrackInfo = preloadedTrackInfo
+        preloadedTrackInfo = null
         cache.clear()
         adState = AdState.NOT_LOADED
         return wrapper.ad
@@ -91,6 +101,8 @@ class NativeAdSlot(
             displayedWrapper?.ad?.destroy()
         }
         displayedWrapper = wrapper
+        displayedTrackInfo = preloadedTrackInfo
+        preloadedTrackInfo = null
         cache.clear()
         // 缓存已取出，状态回到未加载，避免 LOADED+空缓存被误判为可展示
         adState = AdState.NOT_LOADED
@@ -134,6 +146,7 @@ class NativeAdSlot(
         val unit = units[currentIndex++]
         val adUnitId = unit.id
         currentRequestStartMs = System.currentTimeMillis()
+        val trackInfo = AdTrackingHooks.onRequest(AdTrackingHelper.AdType.NATIVE, slotName)
         AdLogger.nativeWaterfallTry(slotName, currentIndex - 1, unit.name, adUnitId, ipKey)
 
         val nativeAdOptions = NativeAdOptions.Builder()
@@ -148,6 +161,7 @@ class NativeAdSlot(
 
         val loader = com.google.android.gms.ads.AdLoader.Builder(context, adUnitId)
             .forNativeAd { ad ->
+                AdTrackingHooks.onFilled(trackInfo, ad.responseInfo)
                 if (token != loadToken) return@forNativeAd
 
                 // 设置广告收益监听
@@ -175,6 +189,7 @@ class NativeAdSlot(
                     vpnSessionId = vpnSessionId
                 )
                 adState = AdState.LOADED
+                preloadedTrackInfo = trackInfo
 
                 AdLogger.nativeLoaded(slotName, unit.name, adUnitId, ipKey)
                 onFinished?.invoke()
@@ -184,11 +199,11 @@ class NativeAdSlot(
             .withAdListener(object : com.google.android.gms.ads.AdListener() {
                 override fun onAdImpression() {
                     displayedShowStartMs = System.currentTimeMillis()
-
+                    AdTrackingHooks.onImpression(displayedTrackInfo ?: preloadedTrackInfo ?: trackInfo)
                 }
 
                 override fun onAdClicked() {
-
+                    AdTrackingHooks.onClick(displayedTrackInfo ?: preloadedTrackInfo ?: trackInfo)
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
@@ -196,6 +211,13 @@ class NativeAdSlot(
                     val deviceInfo = "Device: ${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}, " +
                             "Android: ${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})"
 
+                    AdTrackingHooks.onFailed(
+                        AdTrackingHelper.AdType.NATIVE,
+                        slotName,
+                        trackInfo,
+                        error.code.toString(),
+                        error.message,
+                    )
                     AdLogger.nativeLoadFailed(
                         slotName, 
                         unit.name, 
@@ -225,6 +247,9 @@ class NativeAdSlot(
         displayedWrapper?.ad?.destroy()
         cache.clear()
         displayedWrapper = null
+        AdTrackingHooks.onClose(displayedTrackInfo)
+        displayedTrackInfo = null
+        preloadedTrackInfo = null
         adState = AdState.NOT_LOADED
         AdLogger.nativeDestroyed(slotName)
     }
@@ -233,11 +258,13 @@ class NativeAdSlot(
         loadToken++
         cache.getWrapper()?.ad?.destroy()
         cache.clear()
+        preloadedTrackInfo = null
         adState = AdState.NOT_LOADED
     }
 
     fun destroyDisplayedAd() {
-
+        AdTrackingHooks.onClose(displayedTrackInfo)
+        displayedTrackInfo = null
         displayedWrapper?.ad?.destroy()
         displayedWrapper = null
         displayedShowStartMs = 0L

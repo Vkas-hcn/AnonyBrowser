@@ -18,7 +18,9 @@ import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.OnPaidEventListener
+import com.anony.bro.wser.data.ref.AdTrackInfo
 import com.anony.bro.wser.data.ref.AdTrackingHelper
+import com.anony.bro.wser.data.ref.AdTrackingHooks
 
 /**
  * bar_banner 双轨缓存：
@@ -40,6 +42,7 @@ class BannerAdSlot(
         val loadTime: Long,
         val collapsible: Boolean,
         var showStartMs: Long = 0L,
+        val trackInfo: AdTrackInfo? = null,
     )
 
     private inner class Track(val mode: BannerMode) {
@@ -47,6 +50,7 @@ class BannerAdSlot(
         @Volatile var loadToken = 0L
         @Volatile var currentIndex = 0
         @Volatile var currentRequestStartMs = 0L
+        var currentTrackInfo: AdTrackInfo? = null
         var cached: Record? = null
         var attachedLoadingAdView: AdView? = null
         private val pendingListeners = ArrayList<AdLoadListener>()
@@ -241,6 +245,8 @@ class BannerAdSlot(
         val unit = units[t.currentIndex++]
 
         t.currentRequestStartMs = System.currentTimeMillis()
+        val trackInfo = AdTrackingHooks.onRequest(AdTrackingHelper.AdType.BANNER, slotName)
+        t.currentTrackInfo = trackInfo
         AdLogger.nativeWaterfallTry(label(mode), t.currentIndex - 1, unit.name, unit.id, slotName)
         val adContext = if (context is Activity && !context.isDestroyed) context else context.applicationContext
         val adView = AdView(adContext).apply {
@@ -292,11 +298,13 @@ class BannerAdSlot(
                 // 非 collapsible 填充也照常展示（AdMob 允许对 collapsible 请求返回普通条），
                 // 展示折叠态好过留白；能否展开取决于 SDK 与是否就地可见加载。
                 AdLogger.nativeLoaded(label(mode), unit.name, unit.id, slotName)
+                AdTrackingHooks.onFilled(trackInfo, adView.responseInfo)
                 val record = Record(
                     adView = adView,
                     unitId = unit.id,
                     loadTime = System.currentTimeMillis(),
                     collapsible = collapsible,
+                    trackInfo = trackInfo,
                 )
                 if (attachTo != null && adView.parent === attachTo) {
                     closeDisplayed()
@@ -330,17 +338,24 @@ class BannerAdSlot(
                 }
                 if (adView.parent != null) adView.destroy()
                 if (token != t.loadToken) return
+                AdTrackingHooks.onFailed(
+                    AdTrackingHelper.AdType.BANNER,
+                    slotName,
+                    trackInfo,
+                    error.code.toString(),
+                    error.message,
+                )
                 AdLogger.nativeLoadFailed(label(mode), unit.name, slotName, "${error.message} (code=${error.code})")
 
                 loadWaterfall(context, units, mode, token, attachTo)
             }
 
             override fun onAdImpression() {
-
+                AdTrackingHooks.onImpression(trackInfoFor(adView, trackInfo))
             }
 
             override fun onAdClicked() {
-
+                AdTrackingHooks.onClick(trackInfoFor(adView, trackInfo))
             }
 
             override fun onAdClosed() {
@@ -352,11 +367,19 @@ class BannerAdSlot(
 
     private fun closeDisplayed() {
         val record = displayed ?: return
+        AdTrackingHooks.onClose(record.trackInfo)
         if (record.showStartMs > 0L) {
 
         }
         destroyAdView(record.adView)
         displayed = null
+    }
+
+    private fun trackInfoFor(adView: AdView, fallback: AdTrackInfo?): AdTrackInfo? {
+        return displayed?.takeIf { it.adView === adView }?.trackInfo
+            ?: regularTrack.cached?.takeIf { it.adView === adView }?.trackInfo
+            ?: collapsibleTrack.cached?.takeIf { it.adView === adView }?.trackInfo
+            ?: fallback
     }
 
     private fun destroyRecord(record: Record?) {

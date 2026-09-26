@@ -846,10 +846,10 @@ class HomeFragment : Fragment() {
 
         item.addView(TextView(requireContext()).apply {
             text = shortcut.name
-            textSize = 13f
+            textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setTextColor(0xFFFFFFFF.toInt())
+            setTextColor(0xFF1E4D39.toInt())
             includeFontPadding = false
             maxLines = 1
         }, LinearLayout.LayoutParams(

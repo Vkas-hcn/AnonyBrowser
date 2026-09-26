@@ -22,7 +22,9 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.nativead.NativeAd
 import com.anony.bro.wser.R
+import com.anony.bro.wser.data.ref.AdTrackInfo
 import com.anony.bro.wser.data.ref.AdTrackingHelper
+import com.anony.bro.wser.data.ref.AdTrackingHooks
 import com.anony.bro.wser.databinding.ItemResultNativeAdBinding
 
 import com.anony.bro.wser.data.vpn.VpnConfigFactory
@@ -113,6 +115,9 @@ object AdMobManager {
     private var interstitialShowStartMs: Long = 0L
 
     @Volatile
+    private var interstitialTrackInfo: AdTrackInfo? = null
+
+    @Volatile
     private var openAdState = AdState.NOT_LOADED
     private val openAdCache = IpBoundSingleCache<AppOpenAd>()
 
@@ -135,6 +140,9 @@ object AdMobManager {
     @Volatile
     private var openAdShowStartMs: Long = 0L
 
+    @Volatile
+    private var openAdTrackInfo: AdTrackInfo? = null
+
     private val nativeResultSlot = NativeAdSlot(AD_TYPE_NATIVE_COMMON, mainHandler)
     private val nativeHomeSlot = NativeAdSlot(AD_TYPE_NATIVE_HOME, mainHandler)
     private val bannerSlot = BannerAdSlot(AD_TYPE_BANNER, mainHandler)
@@ -148,6 +156,7 @@ object AdMobManager {
         var posId: String? = null,
         var loadedAt: Long = 0L,
         var loading: Boolean = false,
+        var trackInfo: AdTrackInfo? = null,
     )
 
     private val placementSlots = InterstitialPlacement.entries.associateWith { PlacementSlot() }
@@ -256,8 +265,8 @@ object AdMobManager {
                     .isEquivalent(parsed.placementConfig(placement))
             ) {
                 placementSlots.getValue(placement).apply {
-                    ad = null; requestId = null; posId = null; state = AdState.NOT_LOADED; loading =
-                    false
+                    ad = null; requestId = null; posId = null; trackInfo = null
+                    state = AdState.NOT_LOADED; loading = false
                 }
             }
         }
@@ -465,6 +474,7 @@ object AdMobManager {
         ad.fullScreenContentCallback = createFullscreenCallback(
             onShow = {
                 interstitialShowStartMs = System.currentTimeMillis()
+                AdTrackingHooks.onImpression(interstitialTrackInfo)
                 // 更新每日展示计数并记录日志
                 InterstitialDailyCapStore.onPresented(
                     appContext ?: activity.applicationContext,
@@ -481,10 +491,12 @@ object AdMobManager {
                 postMain { listener?.onAdShowed() }
             },
             onClick = {
-
+                AdTrackingHooks.onClick(interstitialTrackInfo)
                 postMain { listener?.onAdClicked() }
             },
             onDismiss = {
+                AdTrackingHooks.onClose(interstitialTrackInfo)
+                interstitialTrackInfo = null
                 // 重置广告状态并清除缓存
                 interstitialAdState = AdState.CLOSED
                 interstitialCache.clear()
@@ -500,7 +512,7 @@ object AdMobManager {
                 postMain { listener?.onAdClosed() }
             },
             onFail = { err ->
-
+                interstitialTrackInfo = null
                 // 重置广告状态并清除缓存
                 interstitialAdState = AdState.NOT_LOADED
                 interstitialCache.clear()
@@ -574,25 +586,26 @@ object AdMobManager {
             onShow = {
                 InterstitialDailyCapStore.onPresented(activity.applicationContext, limit, capSlot)
                 AdLogger.interstitialPresented(placement.id)
-
+                AdTrackingHooks.onImpression(slot.trackInfo)
                 postMain { listener?.onAdShowed() }
             },
             onClick = {
-
+                AdTrackingHooks.onClick(slot.trackInfo)
                 postMain { listener?.onAdClicked() }
             },
             onDismiss = {
+                AdTrackingHooks.onClose(slot.trackInfo)
                 slot.ad = null; slot.state = AdState.NOT_LOADED; slot.loading = false
                 AdLogger.interstitialClosed(placement.id)
 
-                slot.requestId = null; slot.posId = null
+                slot.requestId = null; slot.posId = null; slot.trackInfo = null
                 AdLogger.interstitialAutoPreload(placement.id)
                 loadInterstitial(activity.applicationContext, placement)
                 postMain { listener?.onAdClosed() }
             },
             onFail = { error ->
-                slot.ad = null; slot.requestId = null; slot.posId = null; slot.state =
-                AdState.NOT_LOADED; slot.loading = false
+                slot.ad = null; slot.requestId = null; slot.posId = null; slot.trackInfo = null
+                slot.state = AdState.NOT_LOADED; slot.loading = false
                 AdLogger.interstitialShowFailed("${placement.id}: $error")
                 postMain { listener?.onAdShowFailed(error) }
             },
@@ -705,6 +718,7 @@ object AdMobManager {
         cachedAd.fullScreenContentCallback = createFullscreenCallback(
             onShow = {
                 openAdShowStartMs = System.currentTimeMillis()
+                AdTrackingHooks.onImpression(openAdTrackInfo)
                 InterstitialDailyCapStore.onPresented(
                     appContext ?: activity.applicationContext,
                     config.openDailyLimit,
@@ -722,10 +736,12 @@ object AdMobManager {
                 postMain { listener?.onAdShowed() }
             },
             onClick = {
-
+                AdTrackingHooks.onClick(openAdTrackInfo)
                 postMain { listener?.onAdClicked() }
             },
             onDismiss = {
+                AdTrackingHooks.onClose(openAdTrackInfo)
+                openAdTrackInfo = null
                 openAdState = AdState.CLOSED
                 openAdCache.clear()
                 openAdState = AdState.NOT_LOADED
@@ -738,6 +754,7 @@ object AdMobManager {
                 postMain { listener?.onAdClosed() }
             },
             onFail = { err ->
+                openAdTrackInfo = null
                 openAdState = AdState.NOT_LOADED
                 openAdCache.clear()
                 openAdShownIpKey = null
@@ -1426,12 +1443,14 @@ object AdMobManager {
         val adUnitId = resolveAdId(AdKind.INTERSTITIAL, unit.id)
         interstitialPosId = unit.name
         interstitialRequestStartMs = System.currentTimeMillis()
+        val trackInfo = AdTrackingHooks.onRequest(AdTrackingHelper.AdType.INTERSTITIAL, unit.name)
         AdLogger.interstitialWaterfallTry(interstitialCurrentIndex - 1, unit.name, adUnitId, ipKey)
 
         InterstitialAd.load(
             context, adUnitId, AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
+                    AdTrackingHooks.onFilled(trackInfo, ad.responseInfo)
                     if (token != interstitialLoadToken) return
 
                     // 设置广告收益监听
@@ -1460,11 +1479,19 @@ object AdMobManager {
                         vpnSessionId = vpnSessionId
                     )
                     interstitialAdState = AdState.LOADED
+                    interstitialTrackInfo = trackInfo
                     AdLogger.interstitialLoaded(unit.name, adUnitId, ipKey)
                     postMain { listener?.onAdLoaded() }
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
+                    AdTrackingHooks.onFailed(
+                        AdTrackingHelper.AdType.INTERSTITIAL,
+                        unit.name,
+                        trackInfo,
+                        error.code.toString(),
+                        error.message,
+                    )
                     AdLogger.interstitialLoadFailed(unit.name, ipKey, error.message)
                     loadInterstitialWaterfall(context, units, ipKey, vpnSessionId, token, listener)
                 }
@@ -1480,12 +1507,13 @@ object AdMobManager {
     ) {
         val slot = placementSlots.getValue(placement)
         if (index >= units.size) {
-            slot.ad = null; slot.requestId = null; slot.posId = null; slot.loading =
-                false; slot.state = AdState.FAILED
+            slot.ad = null; slot.requestId = null; slot.posId = null; slot.trackInfo = null
+            slot.loading = false; slot.state = AdState.FAILED
             postMain { listener?.onAdFailedToLoad(ERROR_ALL_INTERSTITIAL_FAILED) }
             return
         }
         val unit = units[index]
+        val trackInfo = AdTrackingHooks.onRequest(AdTrackingHelper.AdType.INTERSTITIAL, unit.name)
         AdLogger.interstitialWaterfallTry(index, unit.name, unit.id, placement.id)
         InterstitialAd.load(
             context,
@@ -1493,6 +1521,7 @@ object AdMobManager {
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
+                    AdTrackingHooks.onFilled(trackInfo, ad.responseInfo)
                     ad.setOnPaidEventListener { adValue ->
                         AdTrackingHelper.trackAdRevenueAdjust(adValue, ad.responseInfo, ad.adUnitId)
                         runCatching {
@@ -1511,6 +1540,8 @@ object AdMobManager {
                     }
                     slot.ad = ad
                     slot.posId = unit.name
+                    slot.requestId = trackInfo.adId
+                    slot.trackInfo = trackInfo
                     slot.loadedAt = System.currentTimeMillis();
                     slot.loading = false
                     slot.state = AdState.LOADED
@@ -1519,6 +1550,13 @@ object AdMobManager {
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
+                    AdTrackingHooks.onFailed(
+                        AdTrackingHelper.AdType.INTERSTITIAL,
+                        unit.name,
+                        trackInfo,
+                        error.code.toString(),
+                        error.message,
+                    )
                     AdLogger.interstitialLoadFailed(unit.name, placement.id, error.message)
                     loadPlacementWaterfall(context, placement, units, index + 1, listener)
                 }
@@ -1574,6 +1612,7 @@ object AdMobManager {
         val adUnitId = resolveAdId(AdKind.APP_OPEN, unit.id)
         openAdPosId = unit.name
         openAdRequestStartMs = System.currentTimeMillis()
+        val trackInfo = AdTrackingHooks.onRequest(AdTrackingHelper.AdType.OPEN, unit.name)
         AdLogger.interstitialWaterfallTry(
             openAdCurrentIndex - 1,
             unit.name,
@@ -1585,6 +1624,7 @@ object AdMobManager {
             context, adUnitId, AdRequest.Builder().build(),
             object : AppOpenAd.AppOpenAdLoadCallback() {
                 override fun onAdLoaded(ad: AppOpenAd) {
+                    AdTrackingHooks.onFilled(trackInfo, ad.responseInfo)
                     if (token != openAdLoadToken) return
 
                     ad.setOnPaidEventListener { adValue ->
@@ -1616,11 +1656,19 @@ object AdMobManager {
                         vpnSessionId = vpnSessionId
                     )
                     openAdState = AdState.LOADED
+                    openAdTrackInfo = trackInfo
                     AdLogger.interstitialLoaded(unit.name, adUnitId, ipKey)
                     postMain { listener?.onAdLoaded() }
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
+                    AdTrackingHooks.onFailed(
+                        AdTrackingHelper.AdType.OPEN,
+                        unit.name,
+                        trackInfo,
+                        error.code.toString(),
+                        error.message,
+                    )
                     AdLogger.interstitialLoadFailed(unit.name, ipKey, error.message)
                     loadOpenAdWaterfall(
                         context,

@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="mainBg">#EBEFDE</color>
     <color name="notification_news_background">#FFFFFFFF</color>
     <color name="notification_news_text">#FF111111</color>
 </resources>
