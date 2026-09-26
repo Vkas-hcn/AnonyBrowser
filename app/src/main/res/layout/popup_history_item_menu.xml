@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="10dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="4dp">
+
+        <LinearLayout
+            android:id="@+id/menuOpenNewTab"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/history_open_new_tab"
+                android:src="@drawable/ic_tab_new_tab" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/history_open_new_tab" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFF2F0FE" />
+
+        <LinearLayout
+            android:id="@+id/menuCopyLink"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/history_copy_link"
+                android:src="@drawable/ic_copy" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/history_copy_link" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFF2F0FE" />
+
+        <LinearLayout
+            android:id="@+id/menuShare"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/browser_share"
+                android:src="@drawable/ic_share" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/browser_share" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFF2F0FE" />
+
+        <LinearLayout
+            android:id="@+id/menuDelete"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/history_delete"
+                android:src="@drawable/ic_delete" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/history_delete"
+                android:textColor="#FFFF1414" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

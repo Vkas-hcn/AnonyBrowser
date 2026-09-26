@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_stats_card"
+    android:clipToOutline="true">
+
+    <ImageView
+        android:id="@+id/newsImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/weather_cloudy"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/newsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/bg_news_title_scrim"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="2"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        tools:text="Headline for the trending news story goes here" />
+
+    <TextView
+        android:id="@+id/newsSource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="14dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#CCFFFFFF"
+        android:textSize="12sp"
+        tools:text="News source" />
+
+    <TextView
+        android:id="@+id/newsType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:background="#66000000"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:textColor="#FFFFFF"
+        android:textSize="11sp" />
+</FrameLayout>

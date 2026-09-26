@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="188dp"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="10dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="4dp">
+
+        <LinearLayout
+            android:id="@+id/menuSelectTabs"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/tabs_select_tabs"
+                android:src="@drawable/ic_tab_select_tabs" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/tabs_select_tabs" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFF2F0FE" />
+
+        <LinearLayout
+            android:id="@+id/menuCloseAllTabs"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/tabs_close_all"
+                android:src="@drawable/ic_tab_delete" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/tabs_close_all" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/browser_guide"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.guide.DefaultBrowserGuideActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_guide" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="12dp"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/btn_browser_guide_allow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|bottom"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:gravity="center"
+                android:paddingHorizontal="24dp"
+                android:text="@string/set_browser_title"
+                android:textColor="#ff111111"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/set_browser_text"
+                android:textColor="#ff363636"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/btn_browser_guide_allow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_allow"
+        android:fontFamily="@font/inter_bold"
+        android:gravity="center"
+        android:paddingVertical="13dp"
+        android:text="@string/set_browser_allow"
+        android:textColor="#ffffffff"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_browser_guide_later"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/btn_browser_guide_later"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/bg_deny"
+        android:fontFamily="@font/inter_bold"
+        android:gravity="center"
+        android:paddingVertical="13dp"
+        android:text="@string/set_browser_later"
+        android:textColor="#ff111111"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

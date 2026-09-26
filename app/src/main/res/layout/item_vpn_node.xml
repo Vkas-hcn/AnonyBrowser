@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp">
+
+        <ImageView
+            android:id="@+id/imgFlag"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            tools:src="@mipmap/ic_united_states" />
+
+        <TextView
+            android:id="@+id/tvNodeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:includeFontPadding="false"
+            android:textColor="#FF111111"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="United States" />
+
+        <ImageView
+            android:id="@+id/imgCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_dis_check"
+            tools:src="@drawable/ic_check" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

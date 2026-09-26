@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homeScroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_home_gradient"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:overScrollMode="never">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homeContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="620dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="24dp">
+
+        <FrameLayout
+            android:id="@+id/newsBanner"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:background="@drawable/weather_sunny"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/newsPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+
+            <LinearLayout
+                android:id="@+id/newsIndicators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/newsEmptyState"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/news_banner_empty"
+                android:textColor="#6B7480"
+                android:textSize="14sp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/searchBox"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_search_box"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="18dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/newsBanner">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="@string/browser_search"
+                android:src="@drawable/ic_search" />
+
+            <EditText
+                android:id="@+id/searchInput"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:autofillHints="url"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/inter_regular"
+                android:hint="@string/browser_search_hint"
+                android:imeOptions="actionSearch"
+                android:inputType="textUri"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#CCFFFFFF"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/shortcutsScroll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:clipToPadding="false"
+            android:fadingEdgeLength="16dp"
+            android:overScrollMode="ifContentScrolls"
+            android:requiresFadingEdge="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchBox">
+
+            <GridLayout
+                android:id="@+id/shortcutsGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="2"
+                android:useDefaultMargins="false"
+                tools:ignore="UselessLeaf" />
+
+        </androidx.core.widget.NestedScrollView>
+
+        <FrameLayout
+            android:id="@+id/nativeAd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/shortcutsScroll" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

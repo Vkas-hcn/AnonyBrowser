@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="181dp"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="10dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="4dp">
+        <LinearLayout
+            android:id="@+id/menuSeamless"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="@string/browser_seamless"
+                android:src="@drawable/ic_seamless" />
+
+            <TextView
+                android:id="@+id/tvSeamless"
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/browser_seamless" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#E8EEF4" />
+        <LinearLayout
+            android:id="@+id/menuRefresh"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="@string/browser_refresh"
+                android:src="@drawable/ic_refresh" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/browser_refresh" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#E8EEF4" />
+
+        <LinearLayout
+            android:id="@+id/menuHistory"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="@string/browser_history"
+                android:src="@drawable/ic_history" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/browser_history" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#E8EEF4" />
+
+        <LinearLayout
+            android:id="@+id/menuShare"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="@string/browser_share"
+                android:src="@drawable/ic_share" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/browser_share" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#E8EEF4" />
+
+        <LinearLayout
+            android:id="@+id/menuCloseTab"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="@string/browser_close_tab"
+                android:src="@drawable/ic_close_tab" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/browser_close_tab" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#E8EEF4" />
+
+        <LinearLayout
+            android:id="@+id/menuSettings"
+            style="@style/BrowserPopupMenuItem">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="@string/browser_settings"
+                android:src="@drawable/ic_setting" />
+
+            <TextView
+                style="@style/BrowserPopupMenuText"
+                android:text="@string/browser_settings" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

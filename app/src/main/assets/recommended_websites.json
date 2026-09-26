@@ -1,0 +1,100 @@
+{
+  "websites": [
+    {"id":"reuters","name":"Reuters","url":"https://www.reuters.com/","icon":"news","description":"World news and latest updates.","categories":["NEWS"],"countries":[],"languages":["en"],"priority":90,"global":true,"official":false,"enabled":true},
+    {"id":"bbc","name":"BBC News","url":"https://www.bbc.com/news","icon":"news","description":"World news and current affairs.","categories":["NEWS"],"countries":[],"languages":["en"],"priority":85,"global":true,"official":false,"enabled":true},
+    {"id":"ap","name":"AP News","url":"https://apnews.com/","icon":"news","description":"Independent reporting from around the world.","categories":["NEWS"],"countries":[],"languages":["en"],"priority":82,"global":true,"official":false,"enabled":true},
+    {"id":"weather_com","name":"Weather.com","url":"https://weather.com/","icon":"weather","description":"Weather forecasts and conditions.","categories":["WEATHER"],"countries":[],"languages":["en"],"priority":80,"global":true,"official":false,"enabled":true},
+    {"id":"accuweather","name":"AccuWeather","url":"https://www.accuweather.com/","icon":"weather","description":"Local forecasts and weather maps.","categories":["WEATHER"],"countries":[],"languages":["en"],"priority":75,"global":true,"official":false,"enabled":true},
+    {"id":"windy","name":"Windy","url":"https://www.windy.com/","icon":"weather","description":"Interactive weather maps and forecasts.","categories":["WEATHER"],"countries":[],"languages":["en"],"priority":70,"global":true,"official":false,"enabled":true},
+    {"id":"xe","name":"XE","url":"https://www.xe.com/","icon":"exchange","description":"Currency rates and conversion tools.","categories":["EXCHANGE"],"countries":[],"languages":["en"],"priority":90,"global":true,"official":false,"enabled":true},
+    {"id":"wise","name":"Wise","url":"https://wise.com/gb/currency-converter/","icon":"exchange","description":"Currency converter and international money tools.","categories":["EXCHANGE"],"countries":[],"languages":["en"],"priority":85,"global":true,"official":false,"enabled":true},
+    {"id":"oanda","name":"OANDA","url":"https://www.oanda.com/currency-converter/","icon":"exchange","description":"Foreign exchange rates and conversion.","categories":["EXCHANGE"],"countries":[],"languages":["en"],"priority":80,"global":true,"official":false,"enabled":true},
+    {"id":"wikipedia","name":"Wikipedia","url":"https://www.wikipedia.org/","icon":"curiosity","description":"Explore knowledge and interesting topics.","categories":["CURIOSITY"],"countries":[],"languages":["en"],"priority":90,"global":true,"official":false,"enabled":true},
+    {"id":"britannica","name":"Britannica","url":"https://www.britannica.com/","icon":"curiosity","description":"Trusted reference and learning topics.","categories":["CURIOSITY"],"countries":[],"languages":["en"],"priority":80,"global":true,"official":false,"enabled":true},
+    {"id":"howstuffworks","name":"HowStuffWorks","url":"https://www.howstuffworks.com/","icon":"curiosity","description":"Explanations for science, history, and everyday life.","categories":["CURIOSITY"],"countries":[],"languages":["en"],"priority":75,"global":true,"official":false,"enabled":true},
+
+    {"id":"us_cnn","name":"CNN","url":"https://www.cnn.com/","icon":"news","description":"US and world news coverage.","categories":["NEWS"],"countries":["US"],"languages":["en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"us_nbc","name":"NBC News","url":"https://www.nbcnews.com/","icon":"news","description":"US breaking news and reporting.","categories":["NEWS"],"countries":["US"],"languages":["en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"us_nws","name":"National Weather Service","url":"https://www.weather.gov/","icon":"weather","description":"Official US weather forecasts and alerts.","categories":["WEATHER"],"countries":["US"],"languages":["en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"gb_guardian","name":"The Guardian","url":"https://www.theguardian.com/uk","icon":"news","description":"UK and international news.","categories":["NEWS"],"countries":["GB"],"languages":["en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"gb_sky","name":"Sky News","url":"https://news.sky.com/uk","icon":"news","description":"UK breaking news and live updates.","categories":["NEWS"],"countries":["GB"],"languages":["en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"gb_met","name":"Met Office","url":"https://www.metoffice.gov.uk/weather","icon":"weather","description":"Official UK weather forecasts and warnings.","categories":["WEATHER"],"countries":["GB"],"languages":["en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"ca_cbc","name":"CBC News","url":"https://www.cbc.ca/news","icon":"news","description":"Canadian news and public affairs.","categories":["NEWS"],"countries":["CA"],"languages":["en","fr"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"ca_ctv","name":"CTV News","url":"https://www.ctvnews.ca/","icon":"news","description":"Canadian breaking news and analysis.","categories":["NEWS"],"countries":["CA"],"languages":["en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"ca_weather","name":"Environment Canada","url":"https://weather.gc.ca/","icon":"weather","description":"Official Canadian weather forecasts and warnings.","categories":["WEATHER"],"countries":["CA"],"languages":["en","fr"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"au_abc","name":"ABC News","url":"https://www.abc.net.au/news","icon":"news","description":"Australian news from the public broadcaster.","categories":["NEWS"],"countries":["AU"],"languages":["en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"au_sbs","name":"SBS News","url":"https://www.sbs.com.au/news","icon":"news","description":"Australian and international news.","categories":["NEWS"],"countries":["AU"],"languages":["en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"au_bom","name":"Bureau of Meteorology","url":"https://www.bom.gov.au/","icon":"weather","description":"Official Australian weather forecasts and warnings.","categories":["WEATHER"],"countries":["AU"],"languages":["en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"nz_rnz","name":"RNZ","url":"https://www.rnz.co.nz/news","icon":"news","description":"New Zealand news and current affairs.","categories":["NEWS"],"countries":["NZ"],"languages":["en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"nz_nzherald","name":"NZ Herald","url":"https://www.nzherald.co.nz/","icon":"news","description":"New Zealand news and updates.","categories":["NEWS"],"countries":["NZ"],"languages":["en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"nz_metservice","name":"MetService","url":"https://www.metservice.com/","icon":"weather","description":"Official New Zealand weather forecasts.","categories":["WEATHER"],"countries":["NZ"],"languages":["en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"jp_nhk","name":"NHK","url":"https://www3.nhk.or.jp/news/","icon":"news","description":"Japanese news from NHK.","categories":["NEWS"],"countries":["JP"],"languages":["ja"],"priority":100,"global":false,"official":false,"enabled":true},
+    {"id":"jp_japantimes","name":"The Japan Times","url":"https://www.japantimes.co.jp/","icon":"news","description":"Japan news in English.","categories":["NEWS"],"countries":["JP"],"languages":["en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"jp_jma","name":"Japan Meteorological Agency","url":"https://www.jma.go.jp/jma/indexe.html","icon":"weather","description":"Official Japanese weather and disaster information.","categories":["WEATHER"],"countries":["JP"],"languages":["ja","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"kr_yonhap","name":"Yonhap News","url":"https://en.yna.co.kr/","icon":"news","description":"Korean news and updates.","categories":["NEWS"],"countries":["KR"],"languages":["ko","en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"kr_herald","name":"Korea Herald","url":"https://www.koreaherald.com/","icon":"news","description":"Korean news in English.","categories":["NEWS"],"countries":["KR"],"languages":["en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"kr_kma","name":"Korea Meteorological Administration","url":"https://www.kma.go.kr/eng/","icon":"weather","description":"Official Korean weather information.","categories":["WEATHER"],"countries":["KR"],"languages":["ko","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"sg_cna","name":"CNA","url":"https://www.channelnewsasia.com/","icon":"news","description":"Singapore and Asia news.","categories":["NEWS"],"countries":["SG"],"languages":["en"],"priority":100,"global":false,"official":false,"enabled":true},
+    {"id":"sg_straits","name":"The Straits Times","url":"https://www.straitstimes.com/","icon":"news","description":"Singapore and regional news.","categories":["NEWS"],"countries":["SG"],"languages":["en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"sg_nea","name":"NEA Weather","url":"https://www.weather.gov.sg/","icon":"weather","description":"Official Singapore weather information.","categories":["WEATHER"],"countries":["SG"],"languages":["en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"in_hindu","name":"The Hindu","url":"https://www.thehindu.com/","icon":"news","description":"Indian and global news.","categories":["NEWS"],"countries":["IN"],"languages":["en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"in_times","name":"Times of India","url":"https://timesofindia.indiatimes.com/","icon":"news","description":"Indian news and updates.","categories":["NEWS"],"countries":["IN"],"languages":["en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"in_imd","name":"India Meteorological Department","url":"https://mausam.imd.gov.in/","icon":"weather","description":"Official Indian weather information.","categories":["WEATHER"],"countries":["IN"],"languages":["en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"de_dw","name":"DW","url":"https://www.dw.com/en/","icon":"news","description":"German and international news.","categories":["NEWS"],"countries":["DE"],"languages":["de","en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"de_tagesschau","name":"Tagesschau","url":"https://www.tagesschau.de/","icon":"news","description":"German news and current affairs.","categories":["NEWS"],"countries":["DE"],"languages":["de"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"de_dwd","name":"German Weather Service","url":"https://www.dwd.de/EN/","icon":"weather","description":"Official German weather forecasts and warnings.","categories":["WEATHER"],"countries":["DE"],"languages":["de","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"fr_france24","name":"France 24","url":"https://www.france24.com/","icon":"news","description":"French and international news.","categories":["NEWS"],"countries":["FR"],"languages":["fr","en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"fr_lemonde","name":"Le Monde","url":"https://www.lemonde.fr/","icon":"news","description":"French news and analysis.","categories":["NEWS"],"countries":["FR"],"languages":["fr"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"fr_meteo","name":"Meteo-France","url":"https://meteofrance.com/","icon":"weather","description":"Official French weather forecasts and warnings.","categories":["WEATHER"],"countries":["FR"],"languages":["fr"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"it_ansa","name":"ANSA","url":"https://www.ansa.it/","icon":"news","description":"Italian and international news.","categories":["NEWS"],"countries":["IT"],"languages":["it"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"it_rainews","name":"Rai News","url":"https://www.rainews.it/","icon":"news","description":"Italian news and live updates.","categories":["NEWS"],"countries":["IT"],"languages":["it"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"it_meteo","name":"Meteo Italia","url":"https://www.meteoam.it/","icon":"weather","description":"Italian meteorological information.","categories":["WEATHER"],"countries":["IT"],"languages":["it"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"es_elpais","name":"El Pais","url":"https://elpais.com/","icon":"news","description":"Spanish and world news.","categories":["NEWS"],"countries":["ES"],"languages":["es"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"es_rtve","name":"RTVE News","url":"https://www.rtve.es/noticias/","icon":"news","description":"Spanish public news service.","categories":["NEWS"],"countries":["ES"],"languages":["es"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"es_aemet","name":"AEMET","url":"https://www.aemet.es/en/portada","icon":"weather","description":"Official Spanish weather forecasts and warnings.","categories":["WEATHER"],"countries":["ES"],"languages":["es","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"nl_nos","name":"NOS","url":"https://nos.nl/","icon":"news","description":"Dutch news and current affairs.","categories":["NEWS"],"countries":["NL"],"languages":["nl"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"nl_nrc","name":"NRC","url":"https://www.nrc.nl/","icon":"news","description":"Dutch news and analysis.","categories":["NEWS"],"countries":["NL"],"languages":["nl"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"nl_knmi","name":"KNMI","url":"https://www.knmi.nl/home","icon":"weather","description":"Official Dutch weather and climate information.","categories":["WEATHER"],"countries":["NL"],"languages":["nl","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"ch_srf","name":"SRF News","url":"https://www.srf.ch/news","icon":"news","description":"Swiss news and current affairs.","categories":["NEWS"],"countries":["CH"],"languages":["de"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"ch_swissinfo","name":"SWI swissinfo.ch","url":"https://www.swissinfo.ch/eng/","icon":"news","description":"Swiss news in multiple languages.","categories":["NEWS"],"countries":["CH"],"languages":["de","fr","it","en"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"ch_meteoswiss","name":"MeteoSwiss","url":"https://www.meteoswiss.admin.ch/","icon":"weather","description":"Official Swiss weather forecasts and warnings.","categories":["WEATHER"],"countries":["CH"],"languages":["de","fr","it","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"se_svtd","name":"SVT Nyheter","url":"https://www.svt.se/nyheter/","icon":"news","description":"Swedish news and current affairs.","categories":["NEWS"],"countries":["SE"],"languages":["sv"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"se_dn","name":"Dagens Nyheter","url":"https://www.dn.se/","icon":"news","description":"Swedish news and analysis.","categories":["NEWS"],"countries":["SE"],"languages":["sv"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"se_smhi","name":"SMHI","url":"https://www.smhi.se/en","icon":"weather","description":"Official Swedish weather forecasts.","categories":["WEATHER"],"countries":["SE"],"languages":["sv","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"no_nrk","name":"NRK News","url":"https://www.nrk.no/","icon":"news","description":"Norwegian news and public affairs.","categories":["NEWS"],"countries":["NO"],"languages":["no"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"no_aftenposten","name":"Aftenposten","url":"https://www.aftenposten.no/","icon":"news","description":"Norwegian news and analysis.","categories":["NEWS"],"countries":["NO"],"languages":["no"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"no_met","name":"MET Norway","url":"https://www.met.no/en","icon":"weather","description":"Official Norwegian weather forecasts.","categories":["WEATHER"],"countries":["NO"],"languages":["no","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"dk_dr","name":"DR News","url":"https://www.dr.dk/nyheder","icon":"news","description":"Danish news and current affairs.","categories":["NEWS"],"countries":["DK"],"languages":["da"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"dk_politiken","name":"Politiken","url":"https://politiken.dk/","icon":"news","description":"Danish news and analysis.","categories":["NEWS"],"countries":["DK"],"languages":["da"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"dk_dmi","name":"DMI","url":"https://www.dmi.dk/","icon":"weather","description":"Official Danish weather forecasts.","categories":["WEATHER"],"countries":["DK"],"languages":["da","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"fi_yle","name":"Yle News","url":"https://yle.fi/a/74-20000066","icon":"news","description":"Finnish news and public affairs.","categories":["NEWS"],"countries":["FI"],"languages":["fi","en"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"fi_hs","name":"Helsingin Sanomat","url":"https://www.hs.fi/","icon":"news","description":"Finnish news and analysis.","categories":["NEWS"],"countries":["FI"],"languages":["fi"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"fi_fmi","name":"Finnish Meteorological Institute","url":"https://en.ilmatieteenlaitos.fi/","icon":"weather","description":"Official Finnish weather forecasts.","categories":["WEATHER"],"countries":["FI"],"languages":["fi","en"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"br_g1","name":"G1","url":"https://g1.globo.com/","icon":"news","description":"Brazilian news and updates.","categories":["NEWS"],"countries":["BR"],"languages":["pt"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"br_folha","name":"Folha de S.Paulo","url":"https://www.folha.uol.com.br/","icon":"news","description":"Brazilian news and analysis.","categories":["NEWS"],"countries":["BR"],"languages":["pt"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"br_inmet","name":"INMET","url":"https://portal.inmet.gov.br/","icon":"weather","description":"Official Brazilian weather information.","categories":["WEATHER"],"countries":["BR"],"languages":["pt"],"priority":100,"global":false,"official":true,"enabled":true},
+
+    {"id":"mx_eluniversal","name":"El Universal","url":"https://www.eluniversal.com.mx/","icon":"news","description":"Mexican news and updates.","categories":["NEWS"],"countries":["MX"],"languages":["es"],"priority":95,"global":false,"official":false,"enabled":true},
+    {"id":"mx_milenio","name":"Milenio","url":"https://www.milenio.com/","icon":"news","description":"Mexican news and analysis.","categories":["NEWS"],"countries":["MX"],"languages":["es"],"priority":90,"global":false,"official":false,"enabled":true},
+    {"id":"mx_smn","name":"Servicio Meteorologico Nacional","url":"https://smn.conagua.gob.mx/","icon":"weather","description":"Official Mexican weather information.","categories":["WEATHER"],"countries":["MX"],"languages":["es"],"priority":100,"global":false,"official":true,"enabled":true}
+  ]
+}

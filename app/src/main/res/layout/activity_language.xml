@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/languageRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF6F8FC"
+    tools:context=".view.settings.LanguageActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="#FFFFFF"
+        android:elevation="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/bg_tab_back_circle"
+            android:contentDescription="@string/browser_back"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:includeFontPadding="false"
+            android:text="@string/settings_language"
+            android:textColor="#FF0A1120"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/languageScroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/nativeAd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintVertical_bias="0">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/rowEnglish"
+                    style="@style/LanguageRow">
+
+                    <TextView
+                        style="@style/LanguageName"
+                        android:text="@string/language_english" />
+
+                    <ImageView
+                        android:id="@+id/imgEnglish"
+                        style="@style/LanguageCheck" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rowTraditionalChinese"
+                    style="@style/LanguageRow">
+
+                    <TextView
+                        style="@style/LanguageName"
+                        android:text="@string/language_traditional_chinese" />
+
+                    <ImageView
+                        android:id="@+id/imgTraditionalChinese"
+                        style="@style/LanguageCheck" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rowJapanese"
+                    style="@style/LanguageRow">
+
+                    <TextView
+                        style="@style/LanguageName"
+                        android:text="@string/language_japanese" />
+
+                    <ImageView
+                        android:id="@+id/imgJapanese"
+                        style="@style/LanguageCheck" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rowKorean"
+                    style="@style/LanguageRow">
+
+                    <TextView
+                        style="@style/LanguageName"
+                        android:text="@string/language_korean" />
+
+                    <ImageView
+                        android:id="@+id/imgKorean"
+                        style="@style/LanguageCheck" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rowSpanish"
+                    style="@style/LanguageRow">
+
+                    <TextView
+                        style="@style/LanguageName"
+                        android:text="@string/language_spanish" />
+
+                    <ImageView
+                        android:id="@+id/imgSpanish"
+                        style="@style/LanguageCheck" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rowPortuguese"
+                    style="@style/LanguageRow">
+
+                    <TextView
+                        style="@style/LanguageName"
+                        android:text="@string/language_portuguese" />
+
+                    <ImageView
+                        android:id="@+id/imgPortuguese"
+                        style="@style/LanguageCheck" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rowArabic"
+                    style="@style/LanguageRow">
+
+                    <TextView
+                        style="@style/LanguageName"
+                        android:text="@string/language_arabic" />
+
+                    <ImageView
+                        android:id="@+id/imgArabic"
+                        style="@style/LanguageCheck" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/nativeAd"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="16dp"
+        android:minHeight="260dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

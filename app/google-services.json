@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "388980690789",
+    "project_id": "app-test-project-d3d49",
+    "storage_bucket": "app-test-project-d3d49.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388980690789:android:e57dd51e33cd3cb43c9b8c",
+        "android_client_info": {
+          "package_name": "com.anony.bro.wser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFsd87cvMmB_hISNF9sj0VE3oQ4eSsir4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

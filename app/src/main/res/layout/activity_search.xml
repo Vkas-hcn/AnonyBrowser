@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/searchRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF6F8FC"
+    tools:context=".view.main.SearchActivity">
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/browser_back"
+            android:src="@drawable/ic_search_back" />
+
+        <LinearLayout
+            android:id="@+id/searchBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_search_page_input"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="11dp">
+
+            <EditText
+                android:id="@+id/searchInput"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/inter_regular"
+                android:hint="@string/browser_search_hint"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="#FF0A1120"
+                android:textColorHint="#737373"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/btnSearch"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/browser_search"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_search_top" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/historySection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        tools:visibility="visible">
+
+        <com.anony.bro.wser.view.main.MaxHeightNestedScrollView
+            android:id="@+id/historyScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="false"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollbars="vertical">
+
+            <GridLayout
+                android:id="@+id/historyGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:columnCount="2"
+                android:useDefaultMargins="false" />
+        </com.anony.bro.wser.view.main.MaxHeightNestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/historyExpandedBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@string/search_history_delete"
+                android:src="@drawable/ic_search_delete" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:fontFamily="@font/inter_regular"
+                android:includeFontPadding="false"
+                android:text="@string/search_history_delete"
+                android:textColor="#FF6B7480"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/historyManageBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/btnHistoryDeleteAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@string/search_history_delete_all"
+                    android:src="@drawable/ic_search_delete" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:includeFontPadding="false"
+                    android:text="@string/search_history_delete_all"
+                    android:textColor="#FF6B7480"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="14dp"
+                android:background="#FFD0D5DD" />
+
+            <LinearLayout
+                android:id="@+id/btnHistoryFinish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@string/search_history_finish"
+                    android:src="@drawable/ic_search_check" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:includeFontPadding="false"
+                    android:text="@string/search_history_finish"
+                    android:textColor="#FF6B7480"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="#FFE6EAF0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/popularHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_goneMarginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/historySection">
+
+        <TextView
+            android:id="@+id/tvPopularTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter_bold"
+            android:includeFontPadding="false"
+            android:text="@string/popular_searches_title"
+            android:textColor="#111111"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/popularLoading"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/btnRefresh"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:contentDescription="@string/browser_refresh"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_reload"
+            app:tint="#FF6B7480" />
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/popularGrid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
+        android:columnCount="2"
+        android:rowCount="3"
+        android:useDefaultMargins="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/popularHeader"
+        tools:ignore="UselessLeaf" />
+
+    <!-- 后续接入 Native Ad 的预留区域，当前不加载广告 -->
+    <FrameLayout
+        android:id="@+id/nativeAd"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/popularGrid"
+        app:layout_constraintVertical_bias="0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

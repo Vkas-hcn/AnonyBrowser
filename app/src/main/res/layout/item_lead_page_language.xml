@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:overScrollMode="never"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_bold"
+                android:includeFontPadding="false"
+                android:text="@string/settings_language"
+                android:textColor="#FF0A1120"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/btn_language_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_lead_ok_button"
+                android:fontFamily="@font/inter_bold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:minWidth="56dp"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="6dp"
+                android:text="@string/lead_ok"
+                android:textColor="#FFFFFFFF"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/rowEnglish"
+                style="@style/LeadLanguageRow">
+
+                <TextView
+                    style="@style/LeadLanguageName"
+                    android:text="@string/language_english" />
+
+                <ImageView
+                    android:id="@+id/imgEnglish"
+                    style="@style/LeadLanguageCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rowJapanese"
+                style="@style/LeadLanguageRow">
+
+                <TextView
+                    style="@style/LeadLanguageName"
+                    android:text="@string/language_japanese" />
+
+                <ImageView
+                    android:id="@+id/imgJapanese"
+                    style="@style/LeadLanguageCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rowKorean"
+                style="@style/LeadLanguageRow">
+
+                <TextView
+                    style="@style/LeadLanguageName"
+                    android:text="@string/language_korean" />
+
+                <ImageView
+                    android:id="@+id/imgKorean"
+                    style="@style/LeadLanguageCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rowSpanish"
+                style="@style/LeadLanguageRow">
+
+                <TextView
+                    style="@style/LeadLanguageName"
+                    android:text="@string/language_spanish" />
+
+                <ImageView
+                    android:id="@+id/imgSpanish"
+                    style="@style/LeadLanguageCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rowPortuguese"
+                style="@style/LeadLanguageRow">
+
+                <TextView
+                    style="@style/LeadLanguageName"
+                    android:text="@string/language_portuguese" />
+
+                <ImageView
+                    android:id="@+id/imgPortuguese"
+                    style="@style/LeadLanguageCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rowTraditionalChinese"
+                style="@style/LeadLanguageRow">
+
+                <TextView
+                    style="@style/LeadLanguageName"
+                    android:text="@string/language_traditional_chinese" />
+
+                <ImageView
+                    android:id="@+id/imgTraditionalChinese"
+                    style="@style/LeadLanguageCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rowArabic"
+                style="@style/LeadLanguageRow">
+
+                <TextView
+                    style="@style/LeadLanguageName"
+                    android:text="@string/language_arabic" />
+
+                <ImageView
+                    android:id="@+id/imgArabic"
+                    style="@style/LeadLanguageCheck" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

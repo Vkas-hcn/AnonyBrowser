@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vpn"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF6F8FC"
+    tools:context=".view.vpn.VpnActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="#FFFFFF"
+        android:elevation="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/bg_tab_back_circle"
+            android:contentDescription="@string/browser_back"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:includeFontPadding="false"
+            android:text="@string/security_amp_privacy_center"
+            android:textColor="#FF0A1120"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/vpn_scroll_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
+
+            <LinearLayout
+                android:id="@+id/vpn_timer_section"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_vpn_enabled_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_regular"
+                    android:includeFontPadding="false"
+                    android:text="@string/vpn_is_enabled"
+                    android:textColor="#FF828896"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_vpn_timer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="1dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="20dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_timer_hours"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_bold"
+                                android:includeFontPadding="false"
+                                android:textColor="#111111"
+                                android:textSize="40sp"
+                                tools:text="00" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginStart="2dp"
+                                android:fontFamily="@font/inter_medium"
+                                android:includeFontPadding="false"
+                                android:text="@string/vpn_time_hr"
+                                android:textColor="#111111"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_timer_minutes"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_bold"
+                                android:includeFontPadding="false"
+                                android:textColor="#111111"
+                                android:textSize="40sp"
+                                tools:text="00" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginStart="2dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:includeFontPadding="false"
+                                android:text="@string/vpn_time_min"
+                                android:textColor="#111111"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_timer_seconds"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_bold"
+                                android:includeFontPadding="false"
+                                android:textColor="#111111"
+                                android:textSize="40sp"
+                                tools:text="00" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginStart="2dp"
+                                android:fontFamily="@font/inter_regular"
+                                android:includeFontPadding="false"
+                                android:text="@string/vpn_time_sec"
+                                android:textColor="#111111"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="12dp"
+                android:drawablePadding="13dp"
+                android:drawableEnd="@drawable/ic_single"
+                android:text="@string/overall_statistics"
+                android:textColor="#ff828896"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/vpn_timer_section" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_stats_empty"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="#FFEAF4FF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tip"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:id="@+id/ll_stats_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="20dp">
+
+                    <ImageView
+                        android:id="@+id/img_stats_empty"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:contentDescription="@string/vpn_stats_empty_title"
+                        android:src="@drawable/ic_dun_pai" />
+
+                    <TextView
+                        android:id="@+id/tv_stats_empty_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/inter_bold"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="@string/vpn_stats_empty_title"
+                        android:textColor="#FF007DFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_stats_empty_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/vpn_stats_empty_message"
+                        android:textColor="#FF828896"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <GridLayout
+                android:id="@+id/statsCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_stats_card"
+                android:columnCount="2"
+                android:padding="12dp"
+                android:rowCount="2"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_stats_empty">
+
+                <LinearLayout
+                    style="@style/HomeStatTile"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_data_protected"
+                        style="@style/HomeStatNumber"
+                        android:text="@string/vpn_stat_data_protected_sample" />
+
+                    <TextView
+                        style="@style/HomeStatLabel"
+                        android:text="@string/vpn_stat_data_protected" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/HomeStatTile"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_ads_blocked"
+                        style="@style/HomeStatNumber"
+                        android:text="0" />
+
+                    <TextView
+                        style="@style/HomeStatLabel"
+                        android:text="@string/vpn_stat_ads_blocked" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/HomeStatTile"
+                    android:layout_marginEnd="6dp">
+
+                    <TextView
+                        android:id="@+id/tv_malware_blocked"
+                        style="@style/HomeStatNumber"
+                        android:text="0" />
+
+                    <TextView
+                        style="@style/HomeStatLabel"
+                        android:text="@string/vpn_stat_malware_blocked" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/HomeStatTile"
+                    android:layout_marginStart="6dp">
+
+                    <TextView
+                        android:id="@+id/tv_real_ip_hidden"
+                        style="@style/HomeStatNumber"
+                        android:text="2" />
+
+                    <TextView
+                        style="@style/HomeStatLabel"
+                        android:text="@string/vpn_stat_real_ip_hidden" />
+                </LinearLayout>
+            </GridLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardView_swich"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statsCard"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp">
+
+                    <ImageView
+                        android:id="@+id/img_vpn_flag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_b_vpn" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_vpn_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="@string/in_browser_vpn"
+                            android:textColor="#ff111111"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_vpn_country"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_medium"
+                            android:includeFontPadding="false"
+                            android:text="@string/start_vpn"
+                            android:textColor="#FF828896"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/img_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_disswich" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardView_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="14dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView_swich"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp">
+
+                    <ImageView
+                        android:id="@+id/img_vpn_flag_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_locations" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_vpn_name_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="@string/vpn_no_server_available_placeholder"
+                            android:textColor="#ff111111"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_vpn_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/disconnect"
+                android:textColor="#FF0A1120"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView_list" />
+
+            <FrameLayout
+                android:id="@+id/nativeAd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_vpn_state" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

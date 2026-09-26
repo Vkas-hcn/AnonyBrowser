@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_home_gradient"
+    android:clipChildren="false"
+    tools:context=".view.main.MainActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/browserContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/bannerOverlay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:elevation="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/browser_back"
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_page_back_dis"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnForward"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnForward"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/browser_forward"
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_page_advance_dis"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnVpn"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/btnBack"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <FrameLayout
+            android:id="@+id/btnTabs"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/browser_tabs"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnMenu"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/btnVpn"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvTabCount"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_tab_counter"
+                android:fontFamily="@font/inter_medium"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="#2C323A"
+                android:textSize="14sp"
+                tools:text="1" />
+        </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/btnMenu"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/browser_menu"
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_nav_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/btnTabs"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnVpn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/browser_vpn"
+            android:padding="12dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_nav_vpn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnTabs"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/btnForward"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
