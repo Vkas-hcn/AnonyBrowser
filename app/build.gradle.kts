@@ -19,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.anony.bro.wser"
+        applicationId = "com.anonybrowser.privateweb"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

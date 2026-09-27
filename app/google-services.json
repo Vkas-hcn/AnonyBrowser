@@ -1,78 +1,21 @@
 {
   "project_info": {
-    "project_number": "535005567027",
-    "project_id": "t509-dca90",
-    "storage_bucket": "t509-dca90.firebasestorage.app"
+    "project_number": "611859566891",
+    "project_id": "anony-browser-private-web",
+    "storage_bucket": "anony-browser-private-web.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:535005567027:android:642b0a4ed6bbfd734e2b46",
+        "mobilesdk_app_id": "1:611859566891:android:9ff5c383db1835c8f0356e",
         "android_client_info": {
-          "package_name": "com.anony.bro.wser"
+          "package_name": "com.anonybrowser.privateweb"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyChXcMy51h10SV1ZoIKT3NQ4yw1p8lWmD4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:535005567027:android:ef4ccd4e2b6e4dce4e2b46",
-        "android_client_info": {
-          "package_name": "com.civet.cat.prince"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyChXcMy51h10SV1ZoIKT3NQ4yw1p8lWmD4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:535005567027:android:16666b468b9e0ca24e2b46",
-        "android_client_info": {
-          "package_name": "com.river.goes.east"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyChXcMy51h10SV1ZoIKT3NQ4yw1p8lWmD4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:535005567027:android:a3595aa4befe0b894e2b46",
-        "android_client_info": {
-          "package_name": "com.spring.breeze.proud.horse.fast"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyChXcMy51h10SV1ZoIKT3NQ4yw1p8lWmD4"
+          "current_key": "AIzaSyCpaZNJ51MLvc0-OFZfhlWTCF7AwO-VNlU"
         }
       ],
       "services": {

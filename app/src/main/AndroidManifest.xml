@@ -22,7 +22,7 @@
         android:theme="@style/Theme.GateBrowser">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-9646391047228589~5720438334"/>
         <meta-data
             android:name="com.facebook.sdk.AutoInitEnabled"
             android:value="false"/>
