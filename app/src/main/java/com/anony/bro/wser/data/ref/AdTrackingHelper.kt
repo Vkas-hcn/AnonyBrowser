@@ -291,7 +291,11 @@ object AdTrackingHelper {
     ) {
         putFirebaseAdRevenue(context, event, revenue, currencyCode)
         runCatching {
-            TrackSDK.track(event, null, TrackPolicy.IMMEDIATE)
+            val props = hashMapOf<String, Any>(
+                FirebaseAnalytics.Param.VALUE to revenue,
+                FirebaseAnalytics.Param.CURRENCY to currencyCode,
+            )
+            TrackSDK.track(event, props, TrackPolicy.IMMEDIATE)
             Log.d(TAG, "trackValueEvent: $event revenue=$revenue currency=$currencyCode")
         }.onFailure {
             Log.e(TAG, "trackValueEvent failed: $event", it)

@@ -273,6 +273,7 @@ class AnonyBrowserVpnService : VpnService() {
     private fun createContentIntent(url: String?): PendingIntent {
         val intent = GuideActivity.createHotStartIntent(this).apply {
             putExtra(LoadingTracking.EXTRA_FROM_SYSTEM, true)
+            putExtra(GuideActivity.EXTRA_FROM_VPN_BAR, true)
             if (!url.isNullOrBlank()) {
                 action = Intent.ACTION_VIEW
                 data = Uri.parse(url)

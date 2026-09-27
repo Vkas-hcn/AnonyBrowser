@@ -32,6 +32,7 @@ import com.anony.bro.wser.BuildConfig
 import com.anony.bro.wser.base.BrowserTabViewModelStore
 import com.anony.bro.wser.ads.AdMobManager
 import com.anony.bro.wser.data.DataHubTool
+import com.anony.bro.wser.data.RetentionTracking
 import com.anony.bro.wser.data.UpDataTool
 import com.anony.bro.wser.data.settings.AppLanguageStore
 import com.anony.bro.wser.guide.BrowserGuideControl
@@ -105,6 +106,8 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
         VpnBarLauncher.ensureRunning(this)
         flushTrackEvents()
         UpDataTool.purgeExpiredCache()
+        // 回访（含冷启动）时检查留存里程碑，命中则上报；内部在 IO 线程执行，不阻塞主线程。
+        RetentionTracking.track(this)
         if (skipNextHotStart) {
             skipNextHotStart = false
             hotStartReady = false
@@ -192,7 +195,7 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
 
     fun initTrackSdk() {
         val trackConfig = TrackConfig.Builder(this)
-            .baseUrl("https://bi.googletogoogle.com")
+            .baseUrl(if (BuildConfig.DEBUG) "https://testbi.googletogoogle.com" else "https://bi.googletogoogle.com")
             .debug(BuildConfig.DEBUG)
             .appId(packageName)
             .channel("google_play")
@@ -200,8 +203,8 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
             .defaultUploadPolicy(TrackPolicy.BATCH)
             .uploadThreadCount(2)
             .maxRetryCount(5)
-            .connectTimeout(10_000)
-            .readTimeout(10_000)
+            .connectTimeout(30_000)
+            .readTimeout(30_000)
             .enablePiggyback(true)
             .enableAppList(false)
             .build()

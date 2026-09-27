@@ -37,7 +37,6 @@ import com.anony.bro.wser.base.BaseViewModel
 import com.anony.bro.wser.ads.AdMobManager
 import com.anony.bro.wser.ads.AdShowListener
 import com.anony.bro.wser.ads.HomeInterstitialPolicy
-import com.anony.bro.wser.data.UpDataTool
 import com.anony.bro.wser.data.history.HistoryRepository
 import com.anony.bro.wser.data.settings.BrowserSettingsStore
 import com.anony.bro.wser.data.tab.PersistedTab
@@ -563,7 +562,7 @@ class MainActivity :
             }
             intent.removeExtra(HintUtil.CO_SHOW_TYPE)
             intent.removeExtra(HintUtil.CO_NOTIFICATION_ID)
-            UpDataTool.trackEvent("news_notification_click")
+            // news_notification_click 已在通知点击落地的启动页（GuideActivity）即时上报，此处仅负责取消通知。
         }
         if (intent.getBooleanExtra(EXTRA_RESET_BROWSER, false)) {
             intent.removeExtra(EXTRA_RESET_BROWSER)

@@ -114,6 +114,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        trackNewsNotificationClickIfNeeded(intent)
         trackLoadingShow(intent)
         rememberNotificationLaunch(this.intent)
         rememberNotificationLaunch(intent)
@@ -153,6 +154,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
     }
 
     override fun initViews(savedInstanceState: Bundle?) {
+        trackNewsNotificationClickIfNeeded(intent)
         trackLoadingShow(intent)
         rememberNotificationLaunch(intent)
         dismissVpnReminderIfOpened(intent)
@@ -563,6 +565,24 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
         }
     }
 
+    /**
+     * 通知点击后尽早上报 news_notification_click：在启动页 onCreate/onNewIntent 收到点击 Intent 时
+     * 立即上报，不再等待开屏与广告流程跳转到内容页。覆盖新闻通知（CO_SHOW_TYPE）与常驻通知栏
+     * （EXTRA_FROM_VPN_BAR）两个来源，并用 extra 标记去重，保证一次点击仅上报一次。
+     *
+     * 说明：Android 12+ 禁止通知点击经由广播/服务再拉起 Activity（trampoline），启动页 onCreate
+     * 即为"点击即达"的最早合法上报点。
+     */
+    private fun trackNewsNotificationClickIfNeeded(intent: Intent) {
+        if (intent.getBooleanExtra(EXTRA_NEWS_CLICK_TRACKED, false)) return
+        val fromNews = intent.hasExtra(HintUtil.CO_SHOW_TYPE)
+        val fromVpnBar = intent.getBooleanExtra(EXTRA_FROM_VPN_BAR, false)
+        if (!fromNews && !fromVpnBar) return
+        intent.putExtra(EXTRA_NEWS_CLICK_TRACKED, true)
+        runCatching { UpDataTool.trackEvent("news_notification_click") }
+            .onFailure { Log.w(TAG, "news_notification_click failed: ${it.message}", it) }
+    }
+
     private fun launchDefaultBrowserGuide() {
         if (browserGuideInFlight || hasNavigatedToMain || isFinishing) return
         browserGuideInFlight = true
@@ -700,6 +720,9 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
         private const val BANNER_LOAD_AFTER_GUIDE2_MS = 500L
         const val EXTRA_HOT_START = "extra_hot_start"
         private const val EXTRA_VPN_REMINDER_CLICK_TRACKED = "extra_vpn_reminder_click_tracked"
+        /** 常驻通知栏点击来源标记：由 [com.anony.bro.wser.vpn.AnonyBrowserVpnService] 写入。 */
+        const val EXTRA_FROM_VPN_BAR = "extra_from_vpn_bar"
+        private const val EXTRA_NEWS_CLICK_TRACKED = "extra_news_click_tracked"
 
         fun createHotStartIntent(context: Context): Intent =
             Intent(context, GuideActivity::class.java).apply {
