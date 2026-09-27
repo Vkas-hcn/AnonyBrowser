@@ -52,7 +52,7 @@ class MessageRecv : FirebaseMessagingService() {
     }
 
     companion object {
-        const val FCM_TOPIC = "anony"
+        const val FCM_TOPIC = "anonybrowser"
         private const val TAG = "FcmNews"
 
         fun subscribeTopic(source: String = "启动") {
