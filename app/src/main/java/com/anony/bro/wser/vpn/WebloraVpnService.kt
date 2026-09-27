@@ -256,6 +256,7 @@ class AnonyBrowserVpnService : VpnService() {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(contentIntent)
             .setDeleteIntent(createDismissIntent())
             .setCustomContentView(contentView)

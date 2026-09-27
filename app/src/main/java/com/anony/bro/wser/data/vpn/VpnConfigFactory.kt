@@ -82,44 +82,4 @@ object VpnConfigFactory {
             })
         }.toString(2)
     }
-
-    var admobConfig = """
-{
-    "ad_switch_control": {
-        "enable_inters_connect": true,
-        "enable_open_back": true,
-        "enable_home_native": true,
-        "enable_connect_native": true,
-        "enable_inters_guide_1": true,
-        "enable_inters_guide_2": true,
-        "enable_inters_home": true,
-        "enable_inters_back": true,
-        "enable_search_inters_back": true,
-        "enable_bar_banner": true
-    },
-    "ad_unit_ids": {
-        "inters_connect": "ca-app-pub-3940256099942544/1033173712",
-        "open_back": "ca-app-pub-3940256099942544/9257395921",
-        "home_native": "ca-app-pub-3940256099942544/2247696110",
-        "connect_native": "ca-app-pub-3940256099942544/2247696110",
-        "inters_guide_1": "ca-app-pub-3940256099942544/1033173712",
-        "inters_guide_2": "ca-app-pub-3940256099942544/1033173712",
-        "inters_home": "ca-app-pub-3940256099942544/1033173712",
-        "inters_back": "ca-app-pub-3940256099942544/1033173712",
-        "search_inters_back": "ca-app-pub-3940256099942544/1033173712",
-        "bar_banner": "ca-app-pub-3940256099942544/9214589741"
-    },
-    "ad_frequency_control": {
-        "max_native_display_count": 10,
-        "max_interstitial_display_count": 10,
-        "max_open_display_count": 10,
-        "inters_connect_loadtime": 10000,
-        "inters_open_loadtime": 10000,
-        "max_banner_display_count": 10
-    },
-    "ad_debug_settings": {
-        "is_debug_mode": false
-    }
-}
-    """.trimIndent()
 }

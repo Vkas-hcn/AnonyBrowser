@@ -207,6 +207,7 @@ object VpnManager {
                     granted,
                     NotificationPermissionTracking.SCENE_VPN,
                 )
+                if (granted) VpnBarLauncher.ensureRunning(activity)
                 notificationsEnabledForSession = granted
                 completeConnectionPermissionFlow()
             },

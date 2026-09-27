@@ -1,61 +1,16 @@
 <resources>
     <string name="app_name">Anony Browser</string>
-    <string name="demo_title">MVVM 架構示範</string>
-    <string name="demo_status_idle">就緒</string>
-    <string name="demo_vpn_disconnected">VPN：未連線</string>
-    <string name="demo_btn_load">模擬頁面載入</string>
-    <string name="demo_btn_error">模擬錯誤</string>
-    <string name="demo_btn_vpn">切換 VPN 狀態</string>
-    <string name="cochannel_name" translatable="false">ActionBar For VPN</string>
 
-    <string name="set_notification_title">允許通知</string>
-    <string name="set_notification_text">即時接收最新的安全性與隱私權提醒。</string>
-    <string name="set_notification_allow">允許</string>
-    <string name="set_notification_later">稍後</string>
     <string name="notification_permission_tips_title">提示</string>
     <string name="notification_permission_tips_message">授予通知權限，以確保及時收到新聞</string>
     <string name="notification_permission_confirm">確認</string>
     <string name="notification_channel_news">熱門新聞</string>
-    <string name="news_open">查看熱門內容</string>
-    <string name="news_banner_title">熱門新聞</string>
     <string name="news_banner_empty">目前無法取得新聞。</string>
-    <string name="notification_open">開啟</string>
-    <string name="pop_d_0">熱門頭條已準備好閱讀</string>
-    <string name="pop_d_1">科技頭條快速更新中</string>
-    <string name="pop_d_2">掌握商業新聞最新消息</string>
-    <string name="pop_d_3">每日世界新聞摘要已準備好</string>
-    <string name="pop_d_4">最新科學新聞正受到關注</string>
-    <string name="pop_d_5">娛樂頭條等你查看</string>
-    <string name="pop_d_6">體育最新消息已送達</string>
-    <string name="pop_d_7">值得一看的健康新聞</string>
-    <string name="pop_d_8">本地新聞已準備好瀏覽</string>
-    <string name="pop_d_9">快速查看今日頭條</string>
-    <string name="pop_j_0">掌握最新熱門新聞</string>
-    <string name="pop_j_1">最新科技新聞已推出</string>
-    <string name="pop_j_2">看看商業界正在發生什麼事</string>
-    <string name="pop_j_3">世界新聞有新的更新</string>
-    <string name="pop_j_4">探索今日科學頭條</string>
-    <string name="pop_j_5">最新娛樂新聞已上線</string>
-    <string name="pop_j_6">體育頭條已有變化</string>
-    <string name="pop_j_7">瀏覽最新健康新聞</string>
-    <string name="pop_j_8">查看最新本地新聞</string>
-    <string name="pop_j_9">開啟個人化新聞摘要</string>
-    <string name="pop_m_0">排程的熱門新聞摘要已準備好</string>
-    <string name="pop_m_1">科技新聞有最新更新</string>
-    <string name="pop_m_2">商業頭條已準備好瀏覽</string>
-    <string name="pop_m_3">新的世界新聞摘要已推出</string>
-    <string name="pop_m_4">科學新聞已準備好提供給你</string>
-    <string name="pop_m_5">娛樂新聞有新的精彩內容</string>
-    <string name="pop_m_6">最新體育新聞已準備好</string>
-    <string name="pop_m_7">健康新聞簡報已準備好</string>
-    <string name="pop_m_8">查看最新本地頭條</string>
-    <string name="pop_m_9">每日新聞摘要已準備好</string>
 
     <string name="set_browser_title">將 Anony Browser 設為預設瀏覽器</string>
     <string name="set_browser_text">將其設為預設瀏覽器後，您可以集中管理網頁活動，並在開啟連結時使用一致的功能與設定，享受順暢體驗。\n\n點選「設為預設」按鈕，然後在開啟的對話方塊中選取「Gate Browser」</string>
     <string name="set_browser_allow">設為預設</string>
     <string name="set_browser_later">稍後</string>
-    <string name="set_browser_already_default">已設為預設瀏覽器</string>
     <string name="set_browser_open_settings_failed">無法開啟預設應用程式設定</string>
 
     <string name="browser_back">返回</string>
@@ -65,20 +20,14 @@
     <string name="browser_menu">選單</string>
     <string name="browser_search">搜尋</string>
     <string name="browser_search_hint">搜尋或輸入網址</string>
-    <string name="browser_add_shortcut">新增捷徑</string>
-    <string name="browser_shortcut_name">名稱</string>
-    <string name="browser_shortcut_url">網址</string>
     <string name="browser_save">儲存</string>
     <string name="browser_cancel">取消</string>
     <string name="browser_new_tab">新分頁</string>
     <string name="browser_refresh">重新整理</string>
-    <string name="browser_stop_loading">停止載入</string>
-    <string name="browser_bookmark">將目前頁面加入書籤</string>
     <string name="browser_seamless">無痕瀏覽</string>
     <string name="browser_seamless_on">無痕已開</string>
     <string name="browser_history">瀏覽紀錄</string>
     <string name="browser_share">分享</string>
-    <string name="browser_downloads">下載</string>
     <string name="browser_settings">設定</string>
     <string name="browser_clear_data">清除瀏覽資料</string>
     <string name="browser_close_tab">關閉分頁</string>
@@ -150,7 +99,6 @@
     <string name="settings_version_format">版本 %1$s</string>
     <string name="settings_check_for_updates">檢查更新</string>
     <string name="settings_privacy_policy">隱私權政策</string>
-    <string name="settings_privacy_policy_url" translatable="false">https://sites.google.com/view/weblora-privatebrowservpn/home</string>
     <string name="settings_language">語言</string>
     <string name="settings_reset_default">重設為預設設定</string>
     <string name="settings_reset_browser">重設 Avast Secure Browser</string>
@@ -190,12 +138,10 @@
     <string name="language_spanish">Español</string>
     <string name="language_portuguese">Português</string>
     <string name="language_arabic">العربية</string>
-    <string name="vpn_stat_data_protected_sample" translatable="false">10.9kB</string>
     <string name="vpn_stat_data_protected">受保護的資料（VPN）</string>
     <string name="vpn_stat_ads_blocked">已封鎖廣告</string>
     <string name="vpn_stat_malware_blocked">已封鎖惡意軟體</string>
     <string name="vpn_stat_real_ip_hidden">已隱藏真實 IP</string>
-    <string name="vpn_no_server_available_placeholder" translatable="false">-</string>
     <string name="vpn_no_server_available">沒有可用的伺服器</string>
     <string name="vpn_server_unavailable">VPN 伺服器無法使用</string>
     <string name="vpn_config_unavailable">VPN 設定無法使用</string>
@@ -227,4 +173,16 @@
     <string name="vpn_reminder_channel">VPN 防護提醒</string>
     <string name="lead_next">下一步</string>
     <string name="lead_continue">繼續</string>
+    <string name="popular_searches_title">熱門搜尋 \uD83D\uDD25</string>
+    <string name="search_history_more">更多記錄</string>
+    <string name="search_history_delete">刪除記錄</string>
+    <string name="search_history_delete_all">全部刪除</string>
+    <string name="search_history_finish">完成</string>
+    <string name="search_history_delete_item">移除搜尋</string>
+    <string name="search_history_delete_all_confirm">要刪除所有搜尋記錄嗎？</string>
+    <string name="lead_vpn_title">私密瀏覽，不留痕跡</string>
+    <string name="lead_vpn_subtitle">內建安全 VPN 通道保護您的隱私，不儲存任何瀏覽記錄</string>
+    <string name="lead_search_title">直達熱門話題</string>
+    <string name="lead_search_subtitle">匯集最新熱門內容，無需輸入即可立即瀏覽。</string>
+    <string name="lead_ok">確定</string>
 </resources>

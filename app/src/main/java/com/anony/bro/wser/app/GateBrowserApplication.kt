@@ -225,7 +225,7 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
     @SuppressLint("HardwareIds")
     private fun initAdJust(application: Application) {
         val deviceId = TrackSDK.getInstance().effectiveDistinctId
-        val appToken = "t5qigkbcfy0w"
+        val appToken = "61tg1jzjq8w0"
         val environment: String = if (BuildConfig.DEBUG) {
             AdjustConfig.ENVIRONMENT_SANDBOX
         } else {

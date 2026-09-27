@@ -35,12 +35,12 @@ object DataHubTool {
     private val API_URL = if (BuildConfig.DEBUG) {
         "https://testserver.googletogoogle.com/api/dispatch"
     } else {
-        ""
+        "https://api.anonyweb.uk/api/dispatch"
     }
     private val CLOAK_URL = if (BuildConfig.DEBUG) {
         "https://testserver.googletogoogle.com/api/cloak"
     } else {
-        ""
+        "https://api.anonyweb.uk/api/cloak"
     }
     private const val PREFS_NAME = "data_hub_prefs"
     private const val KEY_VPN_DATA = "vpn_data"
@@ -62,14 +62,14 @@ object DataHubTool {
     private val cloakMutex = Mutex()
     private val vpnDataListeners = CopyOnWriteArraySet<() -> Unit>()
     private val requestFieldMapping = linkedMapOf(
-            "appName" to "ym0cyq",
-            "version" to "9c5kuk",
-            "distinctId" to "w2glik",
-            "gaid" to "gvpjdg",
-            "phoneModel" to "hd9jt9",
-            "refer" to "63q172",
-            "language" to "cenkij",
-            "osVersion" to "wnvb5l"
+        "appName" to "xun6lu",
+        "version" to "vnv8yn",
+        "distinctId" to "jrchyi",
+        "gaid" to "aa87rc",
+        "phoneModel" to "sjqxfr",
+        "refer" to "rosnum",
+        "language" to "9w8xdw",
+        "osVersion" to "6w2bdp"
     )
 
     @Volatile
@@ -154,8 +154,8 @@ object DataHubTool {
 
     internal fun isRefreshDue(lastRequestTime: Long, now: Long): Boolean =
         lastRequestTime <= 0L ||
-            now < lastRequestTime ||
-            now - lastRequestTime >= REFRESH_INTERVAL_MS
+                now < lastRequestTime ||
+                now - lastRequestTime >= REFRESH_INTERVAL_MS
 
     private fun loadCachedVpnData(context: Context) {
         Log.d(TAG, "cache: reading local vpn data")
@@ -220,7 +220,7 @@ object DataHubTool {
             Log.w(
                 TAG,
                 "Dispatch request failed, attempt=${attempt + 1}/${DISPATCH_RETRY_COUNT + 1}: " +
-                    result.exceptionOrNull()?.message,
+                        result.exceptionOrNull()?.message,
                 result.exceptionOrNull(),
             )
             if (attempt < DISPATCH_RETRY_COUNT) {
@@ -359,51 +359,52 @@ object DataHubTool {
     private suspend fun postDispatch(payload: String): String =
         postJson(API_URL, "dispatch", payload)
 
-    private suspend fun postJson(url: String, label: String, payload: String): String = withContext(Dispatchers.IO) {
-        Log.d(TAG, "$label request: open url=$url method=POST")
-        val connection = (URL(url).openConnection() as HttpURLConnection).apply {
-            requestMethod = "POST"
-            connectTimeout = CONNECT_TIMEOUT_MS
-            readTimeout = READ_TIMEOUT_MS
-            doInput = true
-            doOutput = true
-            setRequestProperty("Content-Type", "application/json; charset=UTF-8")
-            setRequestProperty("Accept", "application/json")
+    private suspend fun postJson(url: String, label: String, payload: String): String =
+        withContext(Dispatchers.IO) {
+            Log.d(TAG, "$label request: open url=$url method=POST")
+            val connection = (URL(url).openConnection() as HttpURLConnection).apply {
+                requestMethod = "POST"
+                connectTimeout = CONNECT_TIMEOUT_MS
+                readTimeout = READ_TIMEOUT_MS
+                doInput = true
+                doOutput = true
+                setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+                setRequestProperty("Accept", "application/json")
+            }
+
+            try {
+                Log.d(
+                    TAG,
+                    "$label request: headers={Content-Type=application/json; charset=UTF-8, Accept=application/json}, " +
+                            "connectTimeout=$CONNECT_TIMEOUT_MS, readTimeout=$READ_TIMEOUT_MS"
+                )
+                Log.d(TAG, "$label request: writing body")
+                OutputStreamWriter(connection.outputStream, Charsets.UTF_8).use { writer ->
+                    writer.write(payload)
+                    writer.flush()
+                }
+                Log.d(TAG, "$label request: body written")
+
+                val statusCode = connection.responseCode
+                Log.d(TAG, "$label response: statusCode=$statusCode")
+                val stream = if (statusCode in 200..299) {
+                    connection.inputStream
+                } else {
+                    connection.errorStream
+                }
+                val body = stream?.bufferedReader(Charsets.UTF_8)
+                    ?.use(BufferedReader::readText)
+                    .orEmpty()
+
+                if (statusCode !in 200..299) {
+                    error("$label server error: HTTP $statusCode, body=$body")
+                }
+                body
+            } finally {
+                Log.d(TAG, "$label request: disconnect")
+                connection.disconnect()
+            }
         }
-
-        try {
-            Log.d(
-                TAG,
-                "$label request: headers={Content-Type=application/json; charset=UTF-8, Accept=application/json}, " +
-                    "connectTimeout=$CONNECT_TIMEOUT_MS, readTimeout=$READ_TIMEOUT_MS"
-            )
-            Log.d(TAG, "$label request: writing body")
-            OutputStreamWriter(connection.outputStream, Charsets.UTF_8).use { writer ->
-                writer.write(payload)
-                writer.flush()
-            }
-            Log.d(TAG, "$label request: body written")
-
-            val statusCode = connection.responseCode
-            Log.d(TAG, "$label response: statusCode=$statusCode")
-            val stream = if (statusCode in 200..299) {
-                connection.inputStream
-            } else {
-                connection.errorStream
-            }
-            val body = stream?.bufferedReader(Charsets.UTF_8)
-                ?.use(BufferedReader::readText)
-                .orEmpty()
-
-            if (statusCode !in 200..299) {
-                error("$label server error: HTTP $statusCode, body=$body")
-            }
-            body
-        } finally {
-            Log.d(TAG, "$label request: disconnect")
-            connection.disconnect()
-        }
-    }
 
     internal fun isAcquiredUser(raw: String): Boolean = runCatching {
         val root = JSONObject(raw)
@@ -510,6 +511,7 @@ object DataHubTool {
             }
         }
     }
+
     @MainThread
     fun initializeFb(context: Context, fbid: String?) {
         val application = context.applicationContext as? Application ?: return
@@ -527,6 +529,7 @@ object DataHubTool {
             Log.e("TAG", "Facebook SDK initialization failed: ${error.message}", error)
         }
     }
+
     private fun parseFacebookConfig(fbid: String?): Pair<String, String>? {
         val parts = fbid
             ?.trim()
@@ -548,5 +551,6 @@ object DataHubTool {
         data class Invalid(val reason: String) : ValidationResult()
     }
 
-    private const val EMPTY_VPN_DATA = """{"code":0,"msg":"empty","data":{"endpoint_cluster":[],"hot_search":[]}}"""
+    private const val EMPTY_VPN_DATA =
+        """{"code":0,"msg":"empty","data":{"endpoint_cluster":[],"hot_search":[]}}"""
 }

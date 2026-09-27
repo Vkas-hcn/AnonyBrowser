@@ -47,6 +47,7 @@ import com.anony.bro.wser.hellohello.HintUtil
 import com.anony.bro.wser.hellohello.VpnReminderNotifier
 import com.anony.bro.wser.view.vpn.VpnActivity
 import com.anony.bro.wser.vpn.NotificationPermissionTracking
+import com.anony.bro.wser.vpn.VpnBarLauncher
 import com.anony.bro.wser.vpn.VpnPermissionHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -97,6 +98,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
                 isGranted,
                 NotificationPermissionTracking.SCENE_STARTUP,
             )
+            if (isGranted) VpnBarLauncher.ensureRunning(this)
             notificationPermissionRequestInFlight = false
             completeNotificationPermissionStep()
         }

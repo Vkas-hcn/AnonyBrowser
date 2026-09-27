@@ -27,7 +27,6 @@ import com.anony.bro.wser.data.ref.AdTrackingHelper
 import com.anony.bro.wser.data.ref.AdTrackingHooks
 import com.anony.bro.wser.databinding.ItemResultNativeAdBinding
 
-import com.anony.bro.wser.data.vpn.VpnConfigFactory
 import com.anony.bro.wser.data.vpn.VpnServerCatalogRepository
 import com.anony.bro.wser.vpn.VpnManager
 import com.anony.bro.wser.vpn.VpnState
@@ -214,9 +213,7 @@ object AdMobManager {
      */
     fun refreshConfig() {
         // 获取远程配置并检查是否有变化
-        val json = VpnServerCatalogRepository.cachedOrEmpty()
-            .adConfig
-            .ifBlank { VpnConfigFactory.admobConfig }
+        val json = VpnServerCatalogRepository.cachedOrEmpty().adConfig
         if (json == lastConfigJson) {
             return
         }

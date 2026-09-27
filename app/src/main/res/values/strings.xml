@@ -2,56 +2,17 @@
     <string name="app_name">Anony Browser</string>
     <string name="vpn_fgs_special_use_subtype" translatable="false">Persistent VPN protection status bar</string>
 
-    <string name="cochannel_name" translatable="false">ActionBar For VPN</string>
 
-    <string name="set_notification_title">Allow notifications</string>
-    <string name="set_notification_text">This way, you’ll stay updated with the latest security and privacy alerts in real time.</string>
-    <string name="set_notification_allow">Allow</string>
-    <string name="set_notification_later">Later</string>
     <string name="notification_permission_tips_title">Tips</string>
     <string name="notification_permission_tips_message">Grant notification permission to ensure timely news reception</string>
     <string name="notification_permission_confirm">Confirm</string>
     <string name="notification_channel_news">Trending news</string>
-    <string name="news_open">See What\'s Hot</string>
-    <string name="news_banner_title">Trending news</string>
     <string name="news_banner_empty">News is unavailable right now.</string>
-    <string name="notification_open">Open</string>
-    <string name="pop_d_0">Top stories are ready to read</string>
-    <string name="pop_d_1">Technology headlines are moving fast</string>
-    <string name="pop_d_2">Business news to catch up on</string>
-    <string name="pop_d_3">Your daily world news brief is ready</string>
-    <string name="pop_d_4">New science stories are trending</string>
-    <string name="pop_d_5">Entertainment headlines are waiting</string>
-    <string name="pop_d_6">Sports updates are in</string>
-    <string name="pop_d_7">Health news worth a look</string>
-    <string name="pop_d_8">Local news is ready to browse</string>
-    <string name="pop_d_9">Take a quick look at today\'s headlines</string>
-    <string name="pop_j_0">Catch up on the latest top stories</string>
-    <string name="pop_j_1">Fresh technology news is available</string>
-    <string name="pop_j_2">See what is happening in business</string>
-    <string name="pop_j_3">World news has new updates</string>
-    <string name="pop_j_4">Explore today\'s science headlines</string>
-    <string name="pop_j_5">New entertainment news is live</string>
-    <string name="pop_j_6">Sports headlines have changed</string>
-    <string name="pop_j_7">Browse the latest health news</string>
-    <string name="pop_j_8">Check the newest local stories</string>
-    <string name="pop_j_9">Open your personalized news roundup</string>
-    <string name="pop_m_0">Your scheduled top stories brief is ready</string>
-    <string name="pop_m_1">Technology news has fresh updates</string>
-    <string name="pop_m_2">Business headlines are ready to browse</string>
-    <string name="pop_m_3">A new world news brief is available</string>
-    <string name="pop_m_4">Science stories are ready for you</string>
-    <string name="pop_m_5">Entertainment news has new highlights</string>
-    <string name="pop_m_6">Latest sports stories are ready</string>
-    <string name="pop_m_7">Your health news briefing is available</string>
-    <string name="pop_m_8">See the newest local headlines</string>
-    <string name="pop_m_9">Your daily news roundup is ready</string>
 
     <string name="set_browser_title">Make Anony Browser your default browser</string>
     <string name="set_browser_text">Setting it as your default browser centralizes your web activity, offering consistent features and settings across links. All to provide you a seamless experience.\n\nClick Set as Default button and select "Gate Browser" in the open dialog</string>
     <string name="set_browser_allow">Set as Default</string>
     <string name="set_browser_later">Later</string>
-    <string name="set_browser_already_default">Already set as default browser</string>
     <string name="set_browser_open_settings_failed">Unable to open default app settings</string>
 
     <string name="browser_back">Back</string>
@@ -68,20 +29,14 @@
     <string name="search_history_finish">Finish</string>
     <string name="search_history_delete_item">Remove search</string>
     <string name="search_history_delete_all_confirm">Delete all search history?</string>
-    <string name="browser_add_shortcut">Add shortcut</string>
-    <string name="browser_shortcut_name">Name</string>
-    <string name="browser_shortcut_url">URL</string>
     <string name="browser_save">Save</string>
     <string name="browser_cancel">Cancel</string>
     <string name="browser_new_tab">New tab</string>
     <string name="browser_refresh">Refresh</string>
-    <string name="browser_stop_loading">Stop loading</string>
-    <string name="browser_bookmark">Bookmark current page</string>
     <string name="browser_seamless">Seamless</string>
     <string name="browser_seamless_on">Seamless On</string>
     <string name="browser_history">History</string>
     <string name="browser_share">Share</string>
-    <string name="browser_downloads">Downloads</string>
     <string name="browser_settings">Settings</string>
     <string name="browser_clear_data">Clear browsing data</string>
     <string name="browser_close_tab">Close Tab</string>
@@ -153,7 +108,7 @@
     <string name="settings_version_format">Version %1$s</string>
     <string name="settings_check_for_updates">Check for updates</string>
     <string name="settings_privacy_policy">Privacy Policy</string>
-    <string name="settings_privacy_policy_url" translatable="false">https://sites.google.com/view/weblora-privatebrowservpn/home</string>
+    <string name="settings_privacy_policy_url" translatable="false">https://sites.google.com/view/anonybrowser-privateweb/home</string>
     <string name="settings_reset_default">Reset to default settings</string>
     <string name="settings_reset_browser">Reset Avast Secure Browser</string>
     <string name="settings_reset_default_confirm">Reset appearance settings to default?</string>
