@@ -107,7 +107,7 @@ object VpnReminderNotifier {
     }
 
     private fun createNotification() = NotificationCompat.Builder(context, CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_notify_logo)
+        .setSmallIcon(R.drawable.ic_app_logo)
         .setContentTitle(context.getString(R.string.vpn_reminder_title))
         .setContentText(context.getString(R.string.vpn_reminder_caption))
         .setAutoCancel(true)

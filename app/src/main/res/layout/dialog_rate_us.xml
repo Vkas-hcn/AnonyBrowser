@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="@string/rate_us_title"
-                android:textColor="#FF111111"
+                android:textColor="@color/mainTextColor"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
@@ -122,9 +122,9 @@
                 android:enabled="false"
                 android:fontFamily="@font/inter_bold"
                 android:text="@string/rate_us_action"
-                android:textColor="#FFFFFFFF"
+                android:textColor="@color/mainTextColor"
                 android:textSize="18sp"
-                app:backgroundTint="#FF2F80ED"
+                app:backgroundTint="#CAE96A"
                 app:cornerRadius="28dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

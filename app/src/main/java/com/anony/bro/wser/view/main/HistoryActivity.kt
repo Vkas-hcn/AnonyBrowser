@@ -285,7 +285,7 @@ class HistoryActivity : AppCompatActivity() {
         header.addView(
             TextView(this).apply {
                 text = group.title
-                setTextColor(0xFF828896.toInt())
+                setTextColor(0xFF1E4D39.toInt())
                 textSize = 12f
                 typeface = Typeface.DEFAULT_BOLD
                 includeFontPadding = false
@@ -338,7 +338,7 @@ class HistoryActivity : AppCompatActivity() {
         textColumn.addView(
             TextView(this).apply {
                 text = entry.title.ifBlank { entry.url }
-                setTextColor(0xFF111111.toInt())
+                setTextColor(0xFF1E4D39.toInt())
                 textSize = 14f
                 typeface = Typeface.DEFAULT_BOLD
                 includeFontPadding = false

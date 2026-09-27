@@ -36,7 +36,7 @@
             android:fontFamily="@font/inter_bold"
             android:includeFontPadding="false"
             android:text="@string/tabs_opened_title"
-            android:textColor="#FF0A1120"
+            android:textColor="@color/mainTextColor"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,7 +103,7 @@
             android:layout_marginTop="15dp"
             android:includeFontPadding="false"
             android:text="@string/tabs_empty_title"
-            android:textColor="#FF000000"
+            android:textColor="@color/mainTextColor"
             android:textSize="18sp" />
 
         <TextView
@@ -116,7 +116,7 @@
             android:includeFontPadding="false"
             android:lineSpacingExtra="2dp"
             android:text="@string/tabs_empty_message"
-            android:textColor="#FF828896"
+            android:textColor="#82968B"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -160,7 +160,7 @@
                 android:includeFontPadding="false"
                 android:text="@string/tabs_new_tab"
                 android:textStyle="bold"
-                android:textColor="#FF111111"
+                android:textColor="@color/mainTextColor"
                 android:textSize="14sp" />
         </LinearLayout>
         <View
@@ -176,6 +176,6 @@
             android:scaleType="centerInside"
             android:paddingEnd="20dp"
 
-            android:src="@drawable/ic_tab_menu" />
+            android:src="@drawable/ic_nav_menu" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

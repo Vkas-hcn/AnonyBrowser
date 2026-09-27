@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal|bottom"
     android:orientation="vertical"
-    android:layout_marginBottom="32dp"
+    android:layout_marginBottom="12dp"
     android:paddingHorizontal="24dp"
     android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/img_illustration"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="251dp"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
         android:scaleType="fitCenter"
@@ -27,7 +27,7 @@
         android:gravity="center"
         android:includeFontPadding="false"
         android:lineSpacingExtra="2dp"
-        android:textColor="#FF0A1120"
+        android:textColor="@color/mainTextColor"
         android:textSize="22sp"
         tools:text="@string/lead_vpn_title" />
 
@@ -40,7 +40,7 @@
         android:gravity="center"
         android:includeFontPadding="false"
         android:lineSpacingExtra="3dp"
-        android:textColor="#FF828896"
+        android:textColor="#82968B"
         android:textSize="14sp"
         tools:text="@string/lead_vpn_subtitle" />
 

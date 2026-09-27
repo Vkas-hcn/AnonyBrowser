@@ -5,7 +5,7 @@
     android:id="@+id/searchRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF6F8FC"
+    android:background="#EBEFDE"
     tools:context=".view.main.SearchActivity">
 
     <LinearLayout
@@ -17,6 +17,7 @@
         android:paddingHorizontal="16dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -53,7 +54,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="#FF0A1120"
-                android:textColorHint="#737373"
+                android:textColorHint="#828896"
                 android:textSize="15sp" />
 
 
@@ -161,7 +162,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="@string/search_history_delete_all"
-                    android:textColor="#FF6B7480"
+                    android:textColor="#82968B"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -195,7 +196,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="@string/search_history_finish"
-                    android:textColor="#FF6B7480"
+                    android:textColor="#82968B"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
@@ -228,7 +229,7 @@
             android:fontFamily="@font/inter_bold"
             android:includeFontPadding="false"
             android:text="@string/popular_searches_title"
-            android:textColor="#111111"
+            android:textColor="@color/mainTextColor"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -247,7 +248,7 @@
             android:contentDescription="@string/browser_refresh"
             android:scaleType="centerInside"
             android:src="@drawable/ic_reload"
-            app:tint="#FF6B7480" />
+            app:tint="@color/mainTextColor" />
     </LinearLayout>
 
     <GridLayout

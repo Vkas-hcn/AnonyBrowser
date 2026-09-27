@@ -247,7 +247,7 @@ class AnonyBrowserVpnService : VpnService() {
         val contentView = createBarView(title, status)
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notify_logo)
+            .setSmallIcon(R.drawable.ic_app_logo)
             .setContentTitle(title)
             .setContentText(status)
             .setOngoing(true)

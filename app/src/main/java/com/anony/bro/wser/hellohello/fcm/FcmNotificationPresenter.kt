@@ -49,7 +49,7 @@ internal object FcmNotificationPresenter {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notify_logo)
+            .setSmallIcon(R.drawable.ic_app_logo)
             .setContentTitle(content.title)
             .setContentText(content.body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(content.body))

@@ -21,6 +21,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -278,7 +279,7 @@ class SearchActivity : AppCompatActivity() {
                 text = keyword
                 maxLines = 1
                 ellipsize = TextUtils.TruncateAt.END
-                setTextColor(KEYWORD_COLOR)
+                setTextColor(ContextCompat.getColor(this@SearchActivity, R.color.mainTextColor))
                 textSize = 14f
                 typeface = ResourcesCompat.getFont(this@SearchActivity, R.font.inter_regular)
                 setPadding(0, dp(10), dp(12), dp(10))
@@ -343,7 +344,7 @@ class SearchActivity : AppCompatActivity() {
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END
             includeFontPadding = false
-            setTextColor(KEYWORD_COLOR)
+            setTextColor(ContextCompat.getColor(this@SearchActivity, R.color.mainTextColor))
             textSize = 14f
             typeface = ResourcesCompat.getFont(this@SearchActivity, R.font.inter_regular)
             if (!managing) {
@@ -523,7 +524,6 @@ class SearchActivity : AppCompatActivity() {
         private const val HISTORY_SCROLL_MAX_DP = 220
         private const val NATIVE_AD_POLL_INTERVAL_MS = 300L
         private const val NATIVE_AD_IDLE_POLL_INTERVAL_MS = 2_000L
-        private val KEYWORD_COLOR = Color.parseColor("#FF3A4458")
         private val SECONDARY_COLOR = Color.parseColor("#FF6B7480")
 
         fun createIntent(context: Context): Intent =

@@ -5,7 +5,7 @@
     android:id="@+id/languageRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF6F8FC"
+    android:background="#EBEFDE"
     tools:context=".view.settings.LanguageActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:fontFamily="@font/inter_bold"
             android:includeFontPadding="false"
             android:text="@string/settings_language"
-            android:textColor="#FF0A1120"
+            android:textColor="@color/mainTextColor"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

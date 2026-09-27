@@ -28,7 +28,7 @@
                 android:fontFamily="@font/inter_bold"
                 android:includeFontPadding="false"
                 android:text="@string/settings_language"
-                android:textColor="#FF0A1120"
+                android:textColor="@color/mainTextColor"
                 android:textSize="20sp" />
 
             <TextView
@@ -43,7 +43,7 @@
                 android:paddingHorizontal="14dp"
                 android:paddingVertical="6dp"
                 android:text="@string/lead_ok"
-                android:textColor="#FFFFFFFF"
+                android:textColor="#CAE96A"
                 android:textSize="14sp" />
         </LinearLayout>
 

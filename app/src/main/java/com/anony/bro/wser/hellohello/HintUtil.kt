@@ -429,7 +429,7 @@ object HintUtil {
         )
         val contentIntent = createIntent(content.url, showType, notificationId)
         return NotificationCompat.Builder(coIntance(), channelId)
-            .setSmallIcon(R.drawable.ic_notify_logo)
+            .setSmallIcon(R.drawable.ic_app_logo)
             .setContentTitle(content.title)
             .setContentText(content.summary)
             .setAutoCancel(true)

@@ -5,7 +5,7 @@
     android:id="@+id/vpn"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF6F8FC"
+    android:background="#EBEFDE"
     tools:context=".view.vpn.VpnActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +38,7 @@
             android:fontFamily="@font/inter_bold"
             android:includeFontPadding="false"
             android:text="@string/security_amp_privacy_center"
-            android:textColor="#FF0A1120"
+            android:textColor="@color/mainTextColor"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -86,7 +86,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:includeFontPadding="false"
                     android:text="@string/vpn_is_enabled"
-                    android:textColor="#FF828896"
+                    android:textColor="@color/mainTextColor"
                     android:textSize="12sp" />
 
                 <com.google.android.material.card.MaterialCardView
@@ -94,7 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#1E4D39"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="1dp"
                     app:strokeWidth="0dp">
@@ -120,7 +120,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/inter_bold"
                                 android:includeFontPadding="false"
-                                android:textColor="#111111"
+                                android:textColor="#CAE96A"
                                 android:textSize="40sp"
                                 tools:text="00" />
 
@@ -132,7 +132,7 @@
                                 android:fontFamily="@font/inter_medium"
                                 android:includeFontPadding="false"
                                 android:text="@string/vpn_time_hr"
-                                android:textColor="#111111"
+                                android:textColor="#CAE96A"
                                 android:textSize="20sp" />
                         </LinearLayout>
 
@@ -149,7 +149,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/inter_bold"
                                 android:includeFontPadding="false"
-                                android:textColor="#111111"
+                                android:textColor="#CAE96A"
                                 android:textSize="40sp"
                                 tools:text="00" />
 
@@ -161,7 +161,7 @@
                                 android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
                                 android:text="@string/vpn_time_min"
-                                android:textColor="#111111"
+                                android:textColor="#CAE96A"
                                 android:textSize="20sp" />
                         </LinearLayout>
 
@@ -178,7 +178,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/inter_bold"
                                 android:includeFontPadding="false"
-                                android:textColor="#111111"
+                                android:textColor="#CAE96A"
                                 android:textSize="40sp"
                                 tools:text="00" />
 
@@ -190,7 +190,7 @@
                                 android:fontFamily="@font/inter_regular"
                                 android:includeFontPadding="false"
                                 android:text="@string/vpn_time_sec"
-                                android:textColor="#111111"
+                                android:textColor="#CAE96A"
                                 android:textSize="20sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -206,7 +206,7 @@
                 android:drawablePadding="13dp"
                 android:drawableEnd="@drawable/ic_single"
                 android:text="@string/overall_statistics"
-                android:textColor="#ff828896"
+                android:textColor="@color/mainTextColor"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/vpn_timer_section" />
@@ -217,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
-                app:cardBackgroundColor="#FFEAF4FF"
+                app:cardBackgroundColor="#1E4D39"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -234,10 +234,11 @@
                     android:paddingHorizontal="24dp"
                     android:paddingVertical="20dp">
 
-                    <ImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/img_stats_empty"
                         android:layout_width="34dp"
                         android:layout_height="34dp"
+                        android:tint="#CAE96A"
                         android:contentDescription="@string/vpn_stats_empty_title"
                         android:src="@drawable/ic_dun_pai" />
 
@@ -250,7 +251,7 @@
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:text="@string/vpn_stats_empty_title"
-                        android:textColor="#FF007DFF"
+                        android:textColor="#CAE96A"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -264,7 +265,7 @@
                         android:includeFontPadding="false"
                         android:lineSpacingExtra="2dp"
                         android:text="@string/vpn_stats_empty_message"
-                        android:textColor="#FF828896"
+                        android:textColor="#FFFFFF"
                         android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -384,7 +385,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/roboto_medium"
                             android:text="@string/in_browser_vpn"
-                            android:textColor="#ff111111"
+                            android:textColor="#1E4D39"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -395,7 +396,7 @@
                             android:fontFamily="@font/roboto_medium"
                             android:includeFontPadding="false"
                             android:text="@string/start_vpn"
-                            android:textColor="#FF828896"
+                            android:textColor="#828896"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -448,7 +449,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/roboto_medium"
                             android:text="@string/vpn_no_server_available_placeholder"
-                            android:textColor="#ff111111"
+                            android:textColor="#1E4D39"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 

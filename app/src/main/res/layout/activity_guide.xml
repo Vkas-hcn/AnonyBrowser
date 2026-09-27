@@ -5,14 +5,28 @@
     android:id="@+id/guide"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_guide"
     tools:context=".view.guide.GuideActivity">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg_guide_new" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_app_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_app_name"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_indicator"
@@ -21,7 +35,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="100dp"
         android:indeterminate="true"
-        app:indicatorColor="#6600FF"
+        app:indicatorColor="@color/mainBg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1366,7 +1366,7 @@ class HomeFragment : Fragment() {
             "ic_tiktok" -> R.drawable.ic_tiktok
             "ic_wikipedia" -> R.drawable.ic_wikipedia
             "ic_x" -> R.drawable.ic_x
-            "ic_add_page" -> R.drawable.ic_add_page
+            "ic_add_page" -> R.drawable.ic_open_new_tab
             else -> R.mipmap.ic_launcher_round
         }
 
