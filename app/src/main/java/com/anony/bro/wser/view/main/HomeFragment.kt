@@ -728,11 +728,27 @@ class HomeFragment : Fragment() {
     private fun updateShortcutsScrollHeight(itemCount: Int) {
         val rows = ((itemCount + SHORTCUT_COLUMN_COUNT - 1) / SHORTCUT_COLUMN_COUNT)
             .coerceAtLeast(1)
-        val targetHeight = if (rows > SHORTCUT_VISIBLE_ROW_COUNT) {
-            dp(SHORTCUT_MAX_HEIGHT_DP)
-        } else {
-            ViewGroup.LayoutParams.WRAP_CONTENT
+        // 未超过可见行数时完整展示，广告自然排在其真实底部下方，二者互不干扰。
+        if (rows <= SHORTCUT_VISIBLE_ROW_COUNT) {
+            setShortcutsScrollHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+            return
         }
+        // 超过可见行数时先用估算高度占位，避免布局跳动。
+        setShortcutsScrollHeight(dp(SHORTCUT_ROW_HEIGHT_DP) * SHORTCUT_VISIBLE_ROW_COUNT)
+        // 布局完成后按实际行高精确锁定为整数行，避免最后一行露半截被下方广告遮挡。
+        val grid = binding.shortcutsGrid
+        grid.post {
+            if (_binding == null) return@post
+            val firstRow = grid.getChildAt(0) ?: return@post
+            val rowBottomMargin =
+                (firstRow.layoutParams as? ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
+            val rowHeight = firstRow.height + rowBottomMargin
+            if (rowHeight <= 0) return@post
+            setShortcutsScrollHeight(rowHeight * SHORTCUT_VISIBLE_ROW_COUNT)
+        }
+    }
+
+    private fun setShortcutsScrollHeight(targetHeight: Int) {
         val params = binding.shortcutsScroll.layoutParams
         if (params.height != targetHeight) {
             params.height = targetHeight
@@ -904,7 +920,7 @@ class HomeFragment : Fragment() {
                         contentDescription = shortcut.name
                         scaleType = ImageView.ScaleType.CENTER_CROP
                         when {
-                            shortcut.isAdd -> setImageResource(R.drawable.ic_add_page)
+                            shortcut.isAdd -> setImageResource(R.drawable.ic_open_new_tab)
                             faviconPath != null -> setImageBitmap(BitmapFactory.decodeFile(faviconPath))
                             else -> setImageResource(shortcut.iconResId())
                         }
@@ -1378,7 +1394,9 @@ class HomeFragment : Fragment() {
         const val KEY_RATE_COMPLETED = "completed"
         const val SHORTCUT_COLUMN_COUNT = 4
         const val SHORTCUT_VISIBLE_ROW_COUNT = 2
-        const val SHORTCUT_MAX_HEIGHT_DP = 220
+        // 单行书签的估算高度（icon 56 + 文字间距 8 + 文字 ~17 + cell 底部 margin 20），
+        // 仅在实际行高测量出来前作为占位，随后会用真实行高精确锁定整数行。
+        const val SHORTCUT_ROW_HEIGHT_DP = 101
         const val NATIVE_AD_POLL_INTERVAL_MS = 300L
         const val NATIVE_AD_IDLE_POLL_INTERVAL_MS = 2_000L
         const val KEY_SHORTCUTS = "shortcuts"

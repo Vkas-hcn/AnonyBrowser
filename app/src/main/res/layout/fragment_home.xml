@@ -73,7 +73,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:contentDescription="@string/browser_search"
-                android:src="@drawable/ic_search" />
+                android:src="@drawable/ic_search_top" />
 
             <EditText
                 android:id="@+id/searchInput"
@@ -90,7 +90,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="#FFFFFF"
-                android:textColorHint="#CCFFFFFF"
+                android:textColorHint="#828896"
                 android:textSize="15sp" />
         </LinearLayout>
 

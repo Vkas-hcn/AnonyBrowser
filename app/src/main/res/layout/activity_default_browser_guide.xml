@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_guide" />
+        android:src="@drawable/bg_guide_new" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
@@ -40,7 +40,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="24dp"
                 android:text="@string/set_browser_title"
-                android:textColor="#ff111111"
+                android:textColor="#1E4D39"
                 android:textSize="20sp" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="2dp"
                 android:text="@string/set_browser_text"
-                android:textColor="#ff363636"
+                android:textColor="#82968B"
                 android:textSize="14sp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -67,7 +67,7 @@
         android:gravity="center"
         android:paddingVertical="13dp"
         android:text="@string/set_browser_allow"
-        android:textColor="#ffffffff"
+        android:textColor="#1E4D39"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/btn_browser_guide_later"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,7 +84,7 @@
         android:gravity="center"
         android:paddingVertical="13dp"
         android:text="@string/set_browser_later"
-        android:textColor="#ff111111"
+        android:textColor="#1E4D39"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

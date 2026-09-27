@@ -95,7 +95,7 @@
                 android:fontFamily="@font/inter_medium"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:textColor="#2C323A"
+                android:textColor="#1E4D39"
                 android:textSize="14sp"
                 tools:text="1" />
         </FrameLayout>

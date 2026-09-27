@@ -20,8 +20,6 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import com.google.firebase.Firebase
-import com.google.firebase.messaging.messaging
 import com.anony.bro.wser.R
 import com.anony.bro.wser.app.GateBrowserApplication
 import com.anony.bro.wser.data.UpDataTool
@@ -115,9 +113,7 @@ object HintUtil {
             }
         }
 
-        Firebase.messaging.subscribeToTopic("weblora").addOnCompleteListener {
-            Log.d(TAG, "FCM topic subscription completed: success=${it.isSuccessful}", it.exception)
-        }
+        MessageRecv.subscribeTopic(source = "启动")
         ContextCompat.registerReceiver(
             application,
             PhoneLockRe(),

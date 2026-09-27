@@ -38,6 +38,7 @@ import com.anony.bro.wser.guide.BrowserGuideControl
 import com.anony.bro.wser.hellohello.HintUtil
 import com.anony.bro.wser.hellohello.NoticeConfigStore
 import com.anony.bro.wser.hellohello.VpnReminderNotifier
+import com.anony.bro.wser.hellohello.fcm.FcmNotificationDecision
 import com.anony.bro.wser.view.guide.GuideActivity
 import com.anony.bro.wser.vpn.VpnBarLauncher
 import com.anony.bro.wser.vpn.VpnManager
@@ -93,6 +94,7 @@ class GateBrowserApplication : Application(), DefaultLifecycleObserver {
         DataHubTool.init(this)
         HintUtil.init(this)
         HintUtil.startJob(this)
+        FcmNotificationDecision.onRuntimeReady()
         AdMobManager.initialize(this) { }
     }
 
