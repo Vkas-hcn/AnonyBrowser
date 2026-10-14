@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 object UpDataTool {
 
     private const val TAG = "trackEvent"
+    private const val TAG_AD_TRACKING = "AdTrackingHelper"
 
     private val trackingScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -62,10 +63,15 @@ object UpDataTool {
         event: String,
         properties: Map<String, String>? = null,
     ) {
+        val props = properties.orEmpty()
+        Log.d(
+            TAG_AD_TRACKING,
+            "埋点上报 name=$event platforms=${TrackPlatform.entries.joinToString(",") { it.id }} params=$props",
+        )
         trackingScope.launch {
             manager.track(
                 event = event,
-                properties = properties.orEmpty(),
+                properties = props,
                 eventType = PendingTrackEvent.TYPE_CUSTOM,
             )
         }

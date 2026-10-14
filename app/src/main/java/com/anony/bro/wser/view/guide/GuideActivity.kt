@@ -151,7 +151,6 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
         binding.progressIndicator.visibility = View.VISIBLE
         if (umpFlowCompleted) {
             startStartupOpenAdFlow()
-            requestStartupNotificationPermission()
         }
     }
 
@@ -165,7 +164,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
 
         }
         showInitialProgress()
-        startUmpFlow()
+        requestStartupNotificationPermission()
     }
 
     override fun observeData() {
@@ -231,7 +230,6 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
     }
 
     private fun requestStartupNotificationPermission() {
-        if (!umpFlowCompleted) return
         if (!GuideViewModel.isNotificationApplicable()) {
             VpnPermissionHelper.trackLegacyAutoAgreeIfNeeded(this)
             completeNotificationPermissionStep()
@@ -257,6 +255,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
                 }
                 notificationPermissionRequestInFlight = true
                 VpnPermissionHelper.markNotificationPermissionRequested(this@GuideActivity)
+                VpnPermissionHelper.trackRequest(NotificationPermissionTracking.SCENE_STARTUP)
                 notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
@@ -266,8 +265,7 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
         if (notificationPermissionResolved) return
         notificationPermissionResolved = true
         viewModel.dismissStep(GuideStep.NOTIFICATION)
-        startStartupAdTimeout()
-        updateStartupAdFlow()
+        startUmpFlow()
         continueAfterInitialProgress()
     }
 
@@ -310,7 +308,8 @@ class GuideActivity : BaseActivity<ActivityGuideBinding, GuideViewModel>() {
             .putBoolean(KEY_UMP_COMPLETED, true)
             .apply()
         startStartupOpenAdFlow()
-        requestStartupNotificationPermission()
+        startStartupAdTimeout()
+        updateStartupAdFlow()
     }
 
     private fun continueAfterInitialProgress() {
