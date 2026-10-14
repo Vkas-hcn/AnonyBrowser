@@ -296,12 +296,7 @@ object VpnManager {
             return
         }
 
-        if (!VpnPermissionHelper.canShowSystemPermissionDialog(activity)) {
-            notificationsEnabledForSession = false
-            completeConnectionPermissionFlow()
-            return
-        }
-
+        // 始终发起系统通知权限申请：系统框能弹则弹；永久拒绝时系统直接返回拒绝，结果回调按拒绝处理。
         runCatching {
             VpnPermissionHelper.requestNotificationPermissionWhenResumed(activity)
         }.onFailure {

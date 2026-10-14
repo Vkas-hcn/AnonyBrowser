@@ -86,6 +86,7 @@ class MainActivity :
     private var homeNotificationGuideVisible = false
     private var homeNotificationRequestStartedAt = 0L
     private var homeNotificationDialogWillShow = false
+    private var homeNotificationRequestInFlight = false
     private var notificationSettingsGuide: BottomSheetDialog? = null
     private var confirmOpenedNotificationSettings = false
     private var settingsGuideClosingProgrammatically = false
@@ -111,6 +112,7 @@ class MainActivity :
     private val homeNotificationLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { granted ->
+        homeNotificationRequestInFlight = false
         val elapsedOk =
             SystemClock.elapsedRealtime() - homeNotificationRequestStartedAt >= SYSTEM_DIALOG_VISIBLE_MIN_MS
         val dialogDidShow = homeNotificationDialogWillShow || elapsedOk
@@ -532,9 +534,12 @@ class MainActivity :
             return
         }
 
+        if (homeNotificationRequestInFlight) return
+
         // 对齐 EfileScan：不预判系统框能否弹出，始终发起系统申请；
         // 是否真正弹出由结果回调按耗时 + rationale 判断，未弹出时才转应用内引导。
         VpnPermissionHelper.markNotificationPermissionRequested(this)
+        homeNotificationRequestInFlight = true
         homeNotificationDialogWillShow =
             ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)
         homeNotificationRequestStartedAt = SystemClock.elapsedRealtime()

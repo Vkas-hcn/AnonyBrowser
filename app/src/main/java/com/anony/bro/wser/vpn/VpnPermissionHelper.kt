@@ -122,7 +122,6 @@ object VpnPermissionHelper {
     }
 
     fun requestNotificationPermission(activity: Activity) {
-        if (!canShowSystemPermissionDialog(activity)) return
         markNotificationPermissionRequested(activity)
         trackRequest(NotificationPermissionTracking.SCENE_VPN)
         ActivityCompat.requestPermissions(
@@ -133,7 +132,6 @@ object VpnPermissionHelper {
     }
 
     fun requestNotificationPermissionWhenResumed(activity: Activity) {
-        if (!canShowSystemPermissionDialog(activity)) return
         val lifecycleOwner = activity as? LifecycleOwner ?: run {
             requestNotificationPermission(activity)
             return
