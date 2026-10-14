@@ -47,8 +47,6 @@ object DataHubTool {
     private const val KEY_LAST_REQUEST_TIME = "last_dispatch_request_time"
     private const val KEY_CLOAK_REPORTED = "cloak_reported"
     private const val KEY_ACTIVATED_REPORTED = "activated_reported"
-    private const val REFERRER_READ_INTERVAL_MS = 1_000L
-    private const val REFERRER_WAIT_TIMEOUT_MS = 10_000L
     private const val CONNECT_TIMEOUT_MS = 15_000
     private const val READ_TIMEOUT_MS = 15_000
     internal const val REFRESH_INTERVAL_MS = 3 * 60 * 60 * 1_000L
@@ -134,8 +132,6 @@ object DataHubTool {
             Log.d(TAG, "refresh: bypass interval source=$source, config not obtained yet")
         }
 
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit { putLong(KEY_LAST_REQUEST_TIME, now) }
         refreshVpnData(context)
     }
 
@@ -182,11 +178,15 @@ object DataHubTool {
 
     private suspend fun refreshVpnData(context: Context) {
         Log.d(TAG, "refresh: start")
+        val referrer = awaitReferrer(context)
+        if (referrer.isNullOrBlank()) {
+            Log.w(TAG, "refresh: skipped, referrer unavailable")
+            return
+        }
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit { putLong(KEY_LAST_REQUEST_TIME, System.currentTimeMillis()) }
         val setup = runCatching {
-            Log.d(TAG, "referrer: resolving")
-            val referrer = awaitReferrer(context)
             Log.d(TAG, "referrer: resolved value=$referrer")
-
             val payload = buildRequestPayload(context, referrer)
             Log.d(TAG, "request: payload=$payload")
             payload
@@ -230,27 +230,20 @@ object DataHubTool {
         Log.w(TAG, "refresh: stopped after ${DISPATCH_RETRY_COUNT + 1} failed attempts")
     }
 
-    private suspend fun awaitReferrer(context: Context): String {
+    private suspend fun awaitReferrer(context: Context): String? {
         GDataRef.readSavedReferrer(context)?.let {
             Log.d(TAG, "referrer: local hit")
             return it
         }
 
         Log.d(TAG, "referrer: local miss, start install referrer request")
-        GDataRef.getRefData(context)
-
-        var elapsedMs = 0L
-        while (elapsedMs < REFERRER_WAIT_TIMEOUT_MS) {
-            delay(REFERRER_READ_INTERVAL_MS.milliseconds)
-            elapsedMs += REFERRER_READ_INTERVAL_MS
-
-            GDataRef.readSavedReferrer(context)?.let {
-                Log.d(TAG, "referrer: acquired after ${elapsedMs}ms")
-                return it
-            }
+        val referrer = GDataRef.getRefData(context)
+        if (referrer.isNullOrBlank()) {
+            Log.w(TAG, "referrer: unavailable, skip request")
+            return null
         }
-        Log.w(TAG, "referrer: unavailable after ${REFERRER_WAIT_TIMEOUT_MS}ms, continue empty")
-        return ""
+        Log.d(TAG, "referrer: acquired")
+        return referrer
     }
 
     private suspend fun buildRequestPayload(context: Context, referrer: String): String {
@@ -303,6 +296,10 @@ object DataHubTool {
 
                 val payload = runCatching {
                     val referrer = awaitReferrer(context)
+                    if (referrer.isNullOrBlank()) {
+                        Log.w(TAG, "cloak: skipped, referrer unavailable")
+                        return@withLock
+                    }
                     buildRequestPayload(context, referrer)
                 }.onFailure {
                     Log.w(TAG, "cloak: build payload failed: ${it.message}", it)
