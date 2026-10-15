@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -18,17 +19,20 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import android.Manifest
 import android.app.Activity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.anony.bro.wser.R
 import com.anony.bro.wser.app.GateBrowserApplication
@@ -54,6 +58,8 @@ import com.anony.bro.wser.view.settings.SettingsActivity
 import com.anony.bro.wser.view.guide.DefaultBrowserGuideActivity
 import com.anony.bro.wser.view.vpn.VpnActivity
 import com.anony.bro.wser.vpn.SettingsGuideSession
+import com.anony.bro.wser.vpn.NotificationPermissionTracking
+import com.anony.bro.wser.vpn.VpnBarLauncher
 import com.anony.bro.wser.vpn.VpnManager
 import com.anony.bro.wser.vpn.VpnPermissionHelper
 import java.util.UUID
@@ -76,7 +82,11 @@ class MainActivity :
     private var lastStatusBarInset = 0
     private var lastNavBarInset = 0
     private var pendingSearchResultTabId: String? = null
-    private var notificationSettingsGuideHandled = false
+    private var skipNextHomeNotificationPrompt = false
+    private var homeNotificationGuideVisible = false
+    private var homeNotificationRequestStartedAt = 0L
+    private var homeNotificationDialogWillShow = false
+    private var homeNotificationRequestInFlight = false
     private var notificationSettingsGuide: BottomSheetDialog? = null
     private var confirmOpenedNotificationSettings = false
     private var settingsGuideClosingProgrammatically = false
@@ -97,6 +107,33 @@ class MainActivity :
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.let(::applyHistoryResult)
+        }
+    }
+    private val homeNotificationLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        homeNotificationRequestInFlight = false
+        val elapsedOk =
+            SystemClock.elapsedRealtime() - homeNotificationRequestStartedAt >= SYSTEM_DIALOG_VISIBLE_MIN_MS
+        val dialogDidShow = homeNotificationDialogWillShow || elapsedOk
+        val blocked = !granted &&
+            !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)
+        val exhausted = blocked && (!dialogDidShow || homeNotificationDialogWillShow)
+
+        if (granted) {
+            VpnPermissionHelper.trackRuntimeResult(granted, NotificationPermissionTracking.SCENE_SETTINGS_GUIDE)
+            skipNextHomeNotificationPrompt = false
+            VpnBarLauncher.ensureRunning(this)
+        } else {
+            if (dialogDidShow) {
+                VpnPermissionHelper.trackRequest(NotificationPermissionTracking.SCENE_SETTINGS_GUIDE)
+                VpnPermissionHelper.trackRuntimeResult(false, NotificationPermissionTracking.SCENE_SETTINGS_GUIDE)
+            }
+            if (exhausted) {
+                showHomeNotificationBottomSheet()
+            } else {
+                skipNextHomeNotificationPrompt = true
+            }
         }
     }
 
@@ -157,7 +194,6 @@ class MainActivity :
             ArrayList(tabs.map { it.loadState.name }),
         )
         outState.putBoolean(STATE_SHOWING_HOME, isShowingHome)
-        outState.putBoolean(STATE_NOTIF_GUIDE_HANDLED, notificationSettingsGuideHandled)
         outState.putBoolean(STATE_AWAIT_NOTIF_SETTINGS, settingsGuideSession.awaitingSettingsResult)
         persistTabsAsync()
     }
@@ -165,6 +201,7 @@ class MainActivity :
     override fun onResume() {
         super.onResume()
         resolveNotificationSettingsGuideResult()
+        scheduleHomeNotificationGuide()
     }
 
     override fun onStop() {
@@ -461,19 +498,62 @@ class MainActivity :
     }
 
     private fun continueHomeGuidesAfterRate() {
-        showNotificationSettingsGuideIfNeeded()
+        scheduleHomeNotificationGuide()
     }
 
-    private fun showNotificationSettingsGuideIfNeeded() {
-        if (notificationSettingsGuideHandled ||
-            isFinishing ||
-            isDestroyed ||
+    private fun scheduleHomeNotificationGuide() {
+        if (!isShowingHome) return
+        binding.main.postDelayed({
+            if (isShowingHome && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
+                !isFinishing && !isDestroyed
+            ) {
+                maybeShowHomeNotificationGuide()
+            }
+        }, 300L)
+    }
+
+    private fun maybeShowHomeNotificationGuide() {
+        if (isFinishing || isDestroyed ||
             homeFragment.isRateDialogShowing() ||
-            notificationSettingsGuide?.isShowing == true ||
-            !VpnPermissionHelper.shouldShowNotificationSettingsGuide(this)
+            homeNotificationGuideVisible
         ) return
 
-        notificationSettingsGuideHandled = true
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            if (!VpnPermissionHelper.areSystemNotificationsEnabled(this)) {
+                showHomeNotificationBottomSheet()
+                return
+            }
+            VpnPermissionHelper.trackLegacyAutoAgreeIfNeeded(this)
+            return
+        }
+
+        if (VpnPermissionHelper.hasNotificationPermission(this)) return
+
+        if (skipNextHomeNotificationPrompt) {
+            skipNextHomeNotificationPrompt = false
+            return
+        }
+
+        if (homeNotificationRequestInFlight) return
+
+        // 对齐 EfileScan：不预判系统框能否弹出，始终发起系统申请；
+        // 是否真正弹出由结果回调按耗时 + rationale 判断，未弹出时才转应用内引导。
+        VpnPermissionHelper.markNotificationPermissionRequested(this)
+        homeNotificationRequestInFlight = true
+        homeNotificationDialogWillShow =
+            ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)
+        homeNotificationRequestStartedAt = SystemClock.elapsedRealtime()
+        homeNotificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    private fun showHomeNotificationBottomSheet() {
+        if (homeNotificationGuideVisible || isFinishing || isDestroyed ||
+            homeFragment.isRateDialogShowing()
+        ) return
+
+        homeNotificationGuideVisible = true
+        settingsGuideSession.reset()
+        VpnPermissionHelper.trackRequest(NotificationPermissionTracking.SCENE_SETTINGS_GUIDE)
         confirmOpenedNotificationSettings = false
         settingsGuideClosingProgrammatically = false
         val dialog = BottomSheetDialog(this)
@@ -496,6 +576,7 @@ class MainActivity :
             if (notificationSettingsGuide === dialog) {
                 notificationSettingsGuide = null
             }
+            homeNotificationGuideVisible = false
             val granted = settingsGuideSession.consumeDismiss(
                 programmatic = settingsGuideClosingProgrammatically || isChangingConfigurations,
                 confirmOpenedSettings = confirmOpenedNotificationSettings,
@@ -509,18 +590,30 @@ class MainActivity :
 
     private fun restoreNotificationSettingsGuideState(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) return
-        notificationSettingsGuideHandled = savedInstanceState.getBoolean(STATE_NOTIF_GUIDE_HANDLED)
         settingsGuideSession.restoreAwaiting(
             savedInstanceState.getBoolean(STATE_AWAIT_NOTIF_SETTINGS),
         )
     }
 
     private fun resolveNotificationSettingsGuideResult() {
-        val granted = settingsGuideSession.consumeSettingsReturn(
-            VpnPermissionHelper.hasNotificationPermission(this),
-        ) ?: return
+        val granted = settingsGuideSession.consumeSettingsReturn(resolveNotificationGranted()) ?: return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            if (granted) {
+                VpnPermissionHelper.trackLegacyAutoAgreeIfNeeded(this)
+            } else {
+                VpnPermissionHelper.trackSettingsGuideResult(false)
+            }
+            return
+        }
         VpnPermissionHelper.trackSettingsGuideResult(granted)
     }
+
+    private fun resolveNotificationGranted(): Boolean =
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            VpnPermissionHelper.areSystemNotificationsEnabled(this)
+        } else {
+            VpnPermissionHelper.hasNotificationPermission(this)
+        }
 
     override fun onBrowserTabsClick() {
         openTabListPage()
@@ -635,6 +728,7 @@ class MainActivity :
         ViewCompat.requestApplyInsets(binding.main)
         applyStatusBarAppearance()
         updateBottomNavState()
+        scheduleHomeNotificationGuide()
     }
 
     private fun returnToHomeWithAd() {
@@ -1182,6 +1276,7 @@ class MainActivity :
                 putExtra(EXTRA_RESET_BROWSER, true)
             }
         const val TAG = "MainActivity"
+        private const val SYSTEM_DIALOG_VISIBLE_MIN_MS = 300L
         const val HOME_TAG = "home_fragment"
         const val TAB_TAG_PREFIX = "browser_tab_"
         const val STATE_SELECTED_TAB = "selected_tab"
@@ -1191,7 +1286,6 @@ class MainActivity :
         const val STATE_TAB_LOADING = "tab_loading"
         const val STATE_TAB_LOAD_STATES = "tab_load_states"
         const val STATE_SHOWING_HOME = "showing_home"
-        const val STATE_NOTIF_GUIDE_HANDLED = "notif_guide_handled"
         const val STATE_AWAIT_NOTIF_SETTINGS = "await_notif_settings"
     }
 }

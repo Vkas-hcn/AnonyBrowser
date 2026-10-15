@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
@@ -42,6 +43,9 @@ object VpnPermissionHelper {
      */
     fun needsNotificationPermission(activity: Activity): Boolean =
         !hasNotificationPermission(activity)
+
+    fun areSystemNotificationsEnabled(context: Context): Boolean =
+        NotificationManagerCompat.from(context).areNotificationsEnabled()
 
     fun markNotificationPermissionRequested(context: Context) {
         context.getSharedPreferences(PREFS_NOTIFICATION_PERMISSION, Context.MODE_PRIVATE)
@@ -95,6 +99,10 @@ object VpnPermissionHelper {
         trackPermissionEvent(NotificationPermissionTracking.eventName(granted), scene)
     }
 
+    fun trackRequest(scene: String) {
+        trackPermissionEvent(NotificationPermissionTracking.EVENT_REQUEST, scene)
+    }
+
     fun trackSettingsGuideResult(granted: Boolean) {
         trackRuntimeResult(granted, NotificationPermissionTracking.SCENE_SETTINGS_GUIDE)
     }
@@ -105,6 +113,7 @@ object VpnPermissionHelper {
                 alreadyTracked = hasTrackedLegacyAutoAgree(context),
             )
         ) return
+        if (!areSystemNotificationsEnabled(context)) return
         markLegacyAutoAgreeTracked(context)
         trackPermissionEvent(
             NotificationPermissionTracking.EVENT_AGREE,
@@ -113,8 +122,8 @@ object VpnPermissionHelper {
     }
 
     fun requestNotificationPermission(activity: Activity) {
-        if (!canShowSystemPermissionDialog(activity)) return
         markNotificationPermissionRequested(activity)
+        trackRequest(NotificationPermissionTracking.SCENE_VPN)
         ActivityCompat.requestPermissions(
             activity,
             arrayOf(Manifest.permission.POST_NOTIFICATIONS),
@@ -123,7 +132,6 @@ object VpnPermissionHelper {
     }
 
     fun requestNotificationPermissionWhenResumed(activity: Activity) {
-        if (!canShowSystemPermissionDialog(activity)) return
         val lifecycleOwner = activity as? LifecycleOwner ?: run {
             requestNotificationPermission(activity)
             return
@@ -185,6 +193,7 @@ object VpnPermissionHelper {
 }
 
 object NotificationPermissionTracking {
+    const val EVENT_REQUEST = "notification_permission_request"
     const val EVENT_AGREE = "notification_agree"
     const val EVENT_REJECT = "notification_reject"
     const val SCENE_STARTUP = "startup"
@@ -238,6 +247,11 @@ class SettingsGuideSession {
     var awaitingSettingsResult = false
         private set
     private var reported = false
+
+    fun reset() {
+        awaitingSettingsResult = false
+        reported = false
+    }
 
     fun consumeDismiss(
         programmatic: Boolean,
